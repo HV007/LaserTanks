@@ -5,14 +5,10 @@
 #define LEFT 2
 #define RIGHT 3
 
-#define BX 6
-#define BY 6
-#define GAP 6
-
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 
-Maze::Maze(): xsize(20), ysize(20), numin(0) {}
+Maze::Maze(): xsize(MAZEX), ysize(MAZEY), numin(0) {}
 
 Maze::Maze(int xsize, int ysize): xsize(xsize), ysize(ysize), numin(0) {}
 
@@ -119,25 +115,26 @@ void Maze::generate() {
     } while(numin < (xsize-2)*(ysize-2));
 }
 
-void Maze::render(SDL_Renderer* renderer) {
+void Maze::render(SDL_Renderer* renderer, Uint8 opacity) {
     int width = (xsize-1)*2 - 1;
 	int height = (ysize-1)*2 - 1;
 
-    for(int y = 0; y <= height - 1; y++) {
-		for(int x = 0; x <= width - 1; x++) {
+    for(int y = 0; y < height; y++) {
+		for(int x = 0; x < width; x++) {
 			if(x%2 == 1 && y%2 == 1) {
-                if(MAZE[x/2+1][y/2+1].in) SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
-                else SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+                if(MAZE[x/2+1][y/2+1].in) SDL_SetRenderDrawColor(renderer, 0, 0, 205, opacity);
+                else SDL_SetRenderDrawColor(renderer, 0, 0, 0, opacity);
 			} else if(x%2 == 0 && y%2 == 0) {
-				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+				SDL_SetRenderDrawColor(renderer, 0, 0, 0, opacity);
 			} else if(x%2 == 0 && y%2 == 1) {
-				if(MAZE[x/2+1][y/2+1].left) SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-                else SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
+				if(MAZE[x/2+1][y/2+1].left) SDL_SetRenderDrawColor(renderer, 0, 0, 0, opacity);
+                else SDL_SetRenderDrawColor(renderer, 0, 0, 205, opacity);
 			} else if(x%2 == 1 && y%2 == 0) {
-				if(MAZE[x/2+1][y/2+1].up) {std::cout << "HERE "; SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);}
-                else SDL_SetRenderDrawColor(renderer, 255, 255, 255, 0);
+				if(MAZE[x/2+1][y/2+1].up) SDL_SetRenderDrawColor(renderer, 0, 0, 0, opacity);
+                else SDL_SetRenderDrawColor(renderer, 0, 0, 205, opacity);
 			}
-            SDL_RenderDrawLine(renderer, BX + (x + 1)*GAP, BY + y*GAP, BX + (x + 1)*GAP, BY + (y + 1)*GAP);
+			SDL_Rect fillRect = {BX + x*GAP, BY + y*GAP, GAP, GAP};
+            SDL_RenderFillRect(renderer, &fillRect);
 		}
 	}
 }

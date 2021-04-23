@@ -19,7 +19,7 @@ public:
 
     void initialise();
     void generate();
-    void render(SDL_Renderer* renderer);
+    void render(SDL_Renderer* renderer, Uint8 opacity);
 
 private:
     int xsize, ysize;
