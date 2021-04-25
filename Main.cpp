@@ -11,8 +11,10 @@ void close();
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 Texture gTextTexture;
+Texture gTankTexture; // Try to include this as a data member in Tank
 
 Maze maze;
+Tank tank;
 
 bool init() {
 	bool success = true;
@@ -23,6 +25,12 @@ bool init() {
 	} else {
 		if(TTF_Init() == -1) {
 			printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+			success = false;
+			return false;
+		}
+		int imgFlags = IMG_INIT_PNG;
+		if(!(IMG_Init(imgFlags) & imgFlags)) {
+			printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
 			success = false;
 			return false;
 		}
@@ -58,6 +66,10 @@ bool loadMedia() {
 		printf( "Failed to render text texture!\n" );
 		success = false;
 	}
+	if(!gTankTexture.loadFromFile( gRenderer, "images/dot.bmp")) {
+		printf( "Failed to load tank texture!\n" );
+		success = false;
+	}
 
     maze.generate();
 
@@ -65,6 +77,7 @@ bool loadMedia() {
 }
 
 void close() {
+	gTankTexture.free();
 	gTextTexture.free();
 
 	SDL_DestroyRenderer(gRenderer);
@@ -72,6 +85,7 @@ void close() {
 	gWindow = NULL;
 	gRenderer = NULL;
 
+	IMG_Quit();
 	TTF_Quit();
 	SDL_Quit();
 }
@@ -103,6 +117,7 @@ int main(int argc, char* args[]) {
 							timer.start();
 						}
 					}
+					tank.handleEvent(e);
 				}
 				SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
 				SDL_RenderClear(gRenderer);
@@ -111,6 +126,11 @@ int main(int argc, char* args[]) {
 					if(timer.getTicks() <= 2000) maze.render(gRenderer, 255*timer.getTicks()/2000);
 					else maze.render(gRenderer, 255);
 				} else gTextTexture.render(gRenderer, (SCREEN_WIDTH - gTextTexture.getWidth())/2, (SCREEN_HEIGHT - gTextTexture.getHeight())/2);
+
+				if(start && timer.getTicks()>2500) {
+					tank.move(SCREEN_WIDTH,SCREEN_HEIGHT);
+					tank.render(gRenderer, gTankTexture);
+				}
 
 				SDL_RenderPresent(gRenderer);
 			}

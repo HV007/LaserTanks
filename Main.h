@@ -12,9 +12,11 @@
 #include <bits/stdc++.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 
 #include "Maze.h"
 #include "Timer.h"
 #include "Texture.h"
+#include "Tank.h"
 
 #endif
