@@ -1,8 +1,8 @@
 #include "Tank.h"
 
 Tank::Tank() {
-    mPosX = 0;
-    mPosY = 0;
+    mPosX = GAP+BX;
+    mPosY = GAP+BY;
 
     mVelX = 0;
     mVelY = 0;

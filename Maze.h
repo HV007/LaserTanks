@@ -20,6 +20,7 @@ public:
     void initialise();
     void generate();
     void render(SDL_Renderer* renderer, Uint8 opacity);
+    bool check_wall(int x,int y);
 
 private:
     int xsize, ysize;

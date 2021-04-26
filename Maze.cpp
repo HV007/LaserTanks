@@ -139,3 +139,7 @@ void Maze::render(SDL_Renderer* renderer, Uint8 opacity) {
 	}
 }
 
+bool Maze::check_wall(int x, int y){
+	return false;
+}
+

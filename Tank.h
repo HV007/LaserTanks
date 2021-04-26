@@ -6,8 +6,8 @@ class Texture;
 
 class Tank {
     public:
-		static const int TANK_WIDTH = 20;
-		static const int TANK_HEIGHT = 20;
+		static const int TANK_WIDTH = 15;
+		static const int TANK_HEIGHT = 15;
 
 		static const int TANK_VEL = 10;
 

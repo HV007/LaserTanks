@@ -128,7 +128,7 @@ int main(int argc, char* args[]) {
 				} else gTextTexture.render(gRenderer, (SCREEN_WIDTH - gTextTexture.getWidth())/2, (SCREEN_HEIGHT - gTextTexture.getHeight())/2);
 
 				if(start && timer.getTicks()>2500) {
-					tank.move(SCREEN_WIDTH,SCREEN_HEIGHT);
+					tank.move(SCREEN_WIDTH,SCREEN_HEIGHT,maze);
 					tank.render(gRenderer, gTankTexture);
 				}
 
