@@ -27,12 +27,23 @@ void Tank::handleEvent(SDL_Event& e) {
 }
 
 void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze &maze) {
-    mPosX += mVelX;
-
-    if(mPosX < 0 || mPosX + TANK_WIDTH > SCREEN_WIDTH || maze.check_wall(mPosX+TANK_WIDTH,mPosY) || maze.check_wall(mPosX,mPosY)) mPosX -= mVelX;
-    mPosY += mVelY;
-    if(mPosY < 0 || mPosY + TANK_HEIGHT > SCREEN_HEIGHT || maze.check_wall(mPosX,mPosY+TANK_HEIGHT) || maze.check_wall(mPosX,mPosY)) {
-        mPosY -= mVelY;
+    for(int i = 0; i < std::abs(mVelX); i++) {
+        if(mVelX > 0) mPosX++;
+        else mPosX--;
+        if(mPosX < 0 || mPosX + TANK_WIDTH > SCREEN_WIDTH || maze.check_wall(mPosX, mPosY) || maze.check_wall(mPosX+TANK_WIDTH, mPosY)) {
+            if(mVelX > 0) mPosX--;
+            else mPosX++;
+            break;
+        }
+    }
+    for(int i = 0; i < std::abs(mVelY); i++) {
+        if(mVelY > 0) mPosY++;
+        else mPosY--;
+        if(mPosY < 0 || mPosY + TANK_HEIGHT > SCREEN_HEIGHT || maze.check_wall(mPosX, mPosY) || maze.check_wall(mPosX, mPosY+TANK_HEIGHT)) {
+            if(mVelY > 0) mPosY--;
+            else mPosY++;
+            break;
+        }
     }
 }
 
