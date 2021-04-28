@@ -69,7 +69,7 @@ bool loadMedia() {
 		printf( "Failed to render text texture!\n" );
 		success = false;
 	}
-	if(!gTankTexture.loadFromFile(gRenderer, "images/dot.bmp")) {
+	if(!gTankTexture.loadFromFile(gRenderer, "images/tank1.bmp")) {
 		printf( "Failed to load tank texture!\n" );
 		success = false;
 	}

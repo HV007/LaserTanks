@@ -6,8 +6,8 @@
 #define BY 6
 #define GAP 20
 
-#define MAZEX 20
-#define MAZEY 10
+#define MAZEX 30
+#define MAZEY 20
 
 #define HEALTH_DROP_INCREMENT 1000
 

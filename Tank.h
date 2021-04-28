@@ -21,6 +21,7 @@ class Tank {
     private:
 		int mPosX, mPosY;
 		int mVelX, mVelY;
+		int face,degree;
 };
 
 #endif
