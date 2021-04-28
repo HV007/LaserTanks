@@ -26,12 +26,12 @@ void Tank::handleEvent(SDL_Event& e) {
     }
 }
 
-void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT) {
+void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze &maze) {
     mPosX += mVelX;
 
-    if(mPosX < 0 || mPosX + TANK_WIDTH > SCREEN_WIDTH) mPosX -= mVelX;
+    if(mPosX < 0 || mPosX + TANK_WIDTH > SCREEN_WIDTH || maze.check_wall(mPosX+TANK_WIDTH,mPosY) || maze.check_wall(mPosX,mPosY)) mPosX -= mVelX;
     mPosY += mVelY;
-    if(mPosY < 0 || mPosY + TANK_HEIGHT > SCREEN_HEIGHT) {
+    if(mPosY < 0 || mPosY + TANK_HEIGHT > SCREEN_HEIGHT || maze.check_wall(mPosX,mPosY+TANK_HEIGHT) || maze.check_wall(mPosX,mPosY)) {
         mPosY -= mVelY;
     }
 }

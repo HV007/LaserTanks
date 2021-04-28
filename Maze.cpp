@@ -139,7 +139,17 @@ void Maze::render(SDL_Renderer* renderer, Uint8 opacity) {
 	}
 }
 
-bool Maze::check_wall(int x, int y){
-	return false;
+bool Maze::check_wall(int x, int y){                 // x and y are pixels 
+	int x_maze=(x-BX)/GAP;
+	int y_maze=(y-BY)/GAP;
+	if (x_maze%2==1 && y_maze%2==1) return false;
+	else if (x_maze%2==0 && y_maze%2==0) return true;
+	else if (x_maze%2==0 && y_maze%2==1){
+		if (MAZE[x/2+1][y/2+1].left) return true;
+		else return false;
+	}else{
+		if (MAZE[x/2+1][y/2+1].up) return true;
+		else return false;
+	}
 }
 
