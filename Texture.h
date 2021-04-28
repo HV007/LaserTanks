@@ -3,8 +3,7 @@
 #pragma once
 #include "Main.h"
 
-class Texture
-{
+class Texture {
 public:
 	Texture();
 	~Texture();

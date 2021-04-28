@@ -3,8 +3,6 @@
 #pragma once
 #include "Main.h"
 
-const int MAX_SIZE = 1000;
-
 struct cell {
     bool in;
     bool up;
