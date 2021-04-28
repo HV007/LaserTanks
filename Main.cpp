@@ -11,10 +11,12 @@ void close();
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 Texture gTextTexture;
-Texture gTankTexture; // Try to include this as a data member in Tank
+Texture gTankTexture;
+Texture gHeartTexture;
 
 Maze maze;
 Tank tank;
+Health health;
 
 bool init() {
 	bool success = true;
@@ -51,6 +53,7 @@ bool init() {
 				SDL_SetRenderDrawBlendMode(gRenderer, SDL_BLENDMODE_BLEND);
 				SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
 				maze.initialise();
+				health.initialise();
 			}
 		}
 	}
@@ -66,7 +69,11 @@ bool loadMedia() {
 		printf( "Failed to render text texture!\n" );
 		success = false;
 	}
-	if(!gTankTexture.loadFromFile( gRenderer, "images/dot.bmp")) {
+	if(!gTankTexture.loadFromFile(gRenderer, "images/dot.bmp")) {
+		printf( "Failed to load tank texture!\n" );
+		success = false;
+	}
+	if(!gHeartTexture.loadFromFile(gRenderer, "images/heart.png")) {
 		printf( "Failed to load tank texture!\n" );
 		success = false;
 	}
@@ -79,6 +86,7 @@ bool loadMedia() {
 void close() {
 	gTankTexture.free();
 	gTextTexture.free();
+	gHeartTexture.free();
 
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
@@ -131,6 +139,12 @@ int main(int argc, char* args[]) {
 					tank.move(SCREEN_WIDTH,SCREEN_HEIGHT);
 					tank.render(gRenderer, gTankTexture);
 				}
+
+				if(start && timer.getTicks() >= health.getNextTick()) {
+					health.generate();
+				}
+
+				if(start) health.render(gRenderer, gHeartTexture);
 
 				SDL_RenderPresent(gRenderer);
 			}

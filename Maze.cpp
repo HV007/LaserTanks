@@ -5,9 +5,6 @@
 #define LEFT 2
 #define RIGHT 3
 
-SDL_Window *window = NULL;
-SDL_Renderer *renderer = NULL;
-
 Maze::Maze(): xsize(MAZEX), ysize(MAZEY), numin(0) {}
 
 Maze::Maze(int xsize, int ysize): xsize(xsize), ysize(ysize), numin(0) {}
