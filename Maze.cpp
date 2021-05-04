@@ -113,40 +113,41 @@ void Maze::generate() {
 }
 
 void Maze::render(SDL_Renderer* renderer, Uint8 opacity) {
-    int width = (xsize-1)*2 - 1;
-	int height = (ysize-1)*2 - 1;
 
-    for(int y = 0; y < height; y++) {
-		for(int x = 0; x < width; x++) {
-			if(x%2 == 1 && y%2 == 1) {
-                if(MAZE[x/2+1][y/2+1].in) SDL_SetRenderDrawColor(renderer, 0, 0, 205, opacity);
-                else SDL_SetRenderDrawColor(renderer, 0, 0, 0, opacity);
-			} else if(x%2 == 0 && y%2 == 0) {
+	for(int y = 1; y < ysize-1; y++) {
+		for(int x = 1; x < xsize-1; x++) {
+			SDL_SetRenderDrawColor(renderer, 0, 0, 205, opacity);
+			SDL_Rect fillRect = {BX + x*GAP, BY + TEXT_GAP + y*GAP, GAP, GAP};
+			SDL_RenderFillRect(renderer, &fillRect);
+			if(MAZE[x][y].left) {
 				SDL_SetRenderDrawColor(renderer, 0, 0, 0, opacity);
-			} else if(x%2 == 0 && y%2 == 1) {
-				if(MAZE[x/2+1][y/2+1].left) SDL_SetRenderDrawColor(renderer, 0, 0, 0, opacity);
-                else SDL_SetRenderDrawColor(renderer, 0, 0, 205, opacity);
-			} else if(x%2 == 1 && y%2 == 0) {
-				if(MAZE[x/2+1][y/2+1].up) SDL_SetRenderDrawColor(renderer, 0, 0, 0, opacity);
-                else SDL_SetRenderDrawColor(renderer, 0, 0, 205, opacity);
+				SDL_Rect fillRect = {BX + x*GAP, BY + TEXT_GAP + y*GAP, WALL_THICKNESS, GAP};
+				SDL_RenderFillRect(renderer, &fillRect);
 			}
-			SDL_Rect fillRect = {BX + x*GAP, BY + y*GAP, GAP, GAP};
-            SDL_RenderFillRect(renderer, &fillRect);
+			if(MAZE[x][y].up) {
+				SDL_SetRenderDrawColor(renderer, 0, 0, 0, opacity);
+				SDL_Rect fillRect = {BX + x*GAP, BY + TEXT_GAP + y*GAP, GAP, WALL_THICKNESS};
+				SDL_RenderFillRect(renderer, &fillRect);
+			}
 		}
 	}
 }
 
-bool Maze::check_wall(int x, int y) {
-	int x_maze = (x - BX)/GAP;
-	int y_maze = (y - BY)/GAP;
-	if(x_maze%2 == 1 && y_maze%2 == 1) return false;
-	else if(x_maze%2 == 0 && y_maze%2 == 0) return true;
-	else if(x_maze%2 == 0 && y_maze%2 == 1) {
-		if(MAZE[x_maze/2+1][y_maze/2+1].left) return true;
-		else return false;
-	} else {
-		if(MAZE[x_maze/2+1][y_maze/2+1].up) return true;
-		else return false;
+bool Maze::check_wall(int xx, int yy) {
+	if(xx <= BX+GAP || xx >= BX+(xsize-1)*GAP || yy <= BY+TEXT_GAP+GAP || yy >= BY+TEXT_GAP+(ysize-1)*GAP) return true;
+
+	for(int y = 1; y < ysize-1; y++) {
+		for(int x = 1; x < xsize-1; x++) {
+			int xxx = xx - BX - x*GAP, yyy = yy - BY - TEXT_GAP - y*GAP;
+			if(MAZE[x][y].left) {
+				if(xxx >= -TOLERANCE && yyy >= -TOLERANCE && xxx <= WALL_THICKNESS+TOLERANCE && yyy <= GAP+TOLERANCE) return true;
+			}
+			if(MAZE[x][y].up) {
+				if(xxx >= -TOLERANCE && yyy >= -TOLERANCE && xxx <= GAP+TOLERANCE && yyy <= WALL_THICKNESS+TOLERANCE) return true;
+			}
+		}
 	}
+
+	return false;
 }
 

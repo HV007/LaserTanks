@@ -4,6 +4,7 @@
 
 class Texture;
 class Maze;
+class Health;
 
 class Tank {
     public:
@@ -15,7 +16,7 @@ class Tank {
 		Tank();
 
 		void handleEvent(SDL_Event& e);
-		void move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze &maze);
+		void move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health, int& h);
 		void render(SDL_Renderer* renderer, Texture &mTankTexture);
 
     private:
