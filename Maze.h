@@ -3,8 +3,6 @@
 #pragma once
 #include "Main.h"
 
-const int MAX_SIZE = 1000;
-
 struct cell {
     bool in;
     bool up;
@@ -20,6 +18,7 @@ public:
     void initialise();
     void generate();
     void render(SDL_Renderer* renderer, Uint8 opacity);
+    bool check_wall(int x,int y);
 
 private:
     int xsize, ysize;

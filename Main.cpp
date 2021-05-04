@@ -11,8 +11,12 @@ void close();
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 Texture gTextTexture;
+Texture gTankTexture;
+Texture gHeartTexture;
 
 Maze maze;
+Tank tank;
+Health health;
 
 bool init() {
 	bool success = true;
@@ -23,6 +27,12 @@ bool init() {
 	} else {
 		if(TTF_Init() == -1) {
 			printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+			success = false;
+			return false;
+		}
+		int imgFlags = IMG_INIT_PNG;
+		if(!(IMG_Init(imgFlags) & imgFlags)) {
+			printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
 			success = false;
 			return false;
 		}
@@ -43,6 +53,7 @@ bool init() {
 				SDL_SetRenderDrawBlendMode(gRenderer, SDL_BLENDMODE_BLEND);
 				SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
 				maze.initialise();
+				health.initialise();
 			}
 		}
 	}
@@ -58,6 +69,14 @@ bool loadMedia() {
 		printf( "Failed to render text texture!\n" );
 		success = false;
 	}
+	if(!gTankTexture.loadFromFile(gRenderer, "images/tank1.bmp")) {
+		printf( "Failed to load tank texture!\n" );
+		success = false;
+	}
+	if(!gHeartTexture.loadFromFile(gRenderer, "images/heart.png")) {
+		printf( "Failed to load tank texture!\n" );
+		success = false;
+	}
 
     maze.generate();
 
@@ -65,13 +84,16 @@ bool loadMedia() {
 }
 
 void close() {
+	gTankTexture.free();
 	gTextTexture.free();
+	gHeartTexture.free();
 
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 	gRenderer = NULL;
 
+	IMG_Quit();
 	TTF_Quit();
 	SDL_Quit();
 }
@@ -103,6 +125,7 @@ int main(int argc, char* args[]) {
 							timer.start();
 						}
 					}
+					tank.handleEvent(e);
 				}
 				SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
 				SDL_RenderClear(gRenderer);
@@ -111,6 +134,17 @@ int main(int argc, char* args[]) {
 					if(timer.getTicks() <= 2000) maze.render(gRenderer, 255*timer.getTicks()/2000);
 					else maze.render(gRenderer, 255);
 				} else gTextTexture.render(gRenderer, (SCREEN_WIDTH - gTextTexture.getWidth())/2, (SCREEN_HEIGHT - gTextTexture.getHeight())/2);
+
+				if(start && timer.getTicks()>2500) {
+					tank.move(SCREEN_WIDTH,SCREEN_HEIGHT,maze);
+					tank.render(gRenderer, gTankTexture);
+				}
+
+				if(start && timer.getTicks() >= health.getNextTick()) {
+					health.generate();
+				}
+
+				if(start) health.render(gRenderer, gHeartTexture);
 
 				SDL_RenderPresent(gRenderer);
 			}

@@ -5,9 +5,6 @@
 #define LEFT 2
 #define RIGHT 3
 
-SDL_Window *window = NULL;
-SDL_Renderer *renderer = NULL;
-
 Maze::Maze(): xsize(MAZEX), ysize(MAZEY), numin(0) {}
 
 Maze::Maze(int xsize, int ysize): xsize(xsize), ysize(ysize), numin(0) {}
@@ -136,6 +133,20 @@ void Maze::render(SDL_Renderer* renderer, Uint8 opacity) {
 			SDL_Rect fillRect = {BX + x*GAP, BY + y*GAP, GAP, GAP};
             SDL_RenderFillRect(renderer, &fillRect);
 		}
+	}
+}
+
+bool Maze::check_wall(int x, int y) {
+	int x_maze = (x - BX)/GAP;
+	int y_maze = (y - BY)/GAP;
+	if(x_maze%2 == 1 && y_maze%2 == 1) return false;
+	else if(x_maze%2 == 0 && y_maze%2 == 0) return true;
+	else if(x_maze%2 == 0 && y_maze%2 == 1) {
+		if(MAZE[x_maze/2+1][y_maze/2+1].left) return true;
+		else return false;
+	} else {
+		if(MAZE[x_maze/2+1][y_maze/2+1].up) return true;
+		else return false;
 	}
 }
 
