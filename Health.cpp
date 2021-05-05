@@ -16,26 +16,34 @@ void Health::generate() {
     int y = rand()%ysize;
     if(x == 0 || y == 0 || x == xsize-1 || y == ysize-1) return;
     if(drops.find({x,y}) == drops.end() || drops[{x,y}] == 0) drops[{x,y}] = 1;
-    std::cout << "HERE: " << x << " " << y << "\n";
+    std::cout << "Health Created: " << x << " " << y << "\n";
 }
 
-void Health::render(SDL_Renderer* renderer, Texture& mTankTexture) {
+void Health::render(SDL_Renderer* renderer, Texture& mHealthTexture) {
 
     for(std::pair<std::pair<int,int>, int> drop : drops) {
-        int x = 2*(drop.first.first - 1) + 1;
-        int y = 2*(drop.first.second - 1) + 1;
-        mTankTexture.setAlpha(drop.second);
-        mTankTexture.render(renderer, BX + x*GAP, BY + y*GAP);
+        int x = drop.first.first;
+        int y = drop.first.second;
+        if(drops[{x,y}] == 0) continue;
+        mHealthTexture.setAlpha(drop.second);
+        mHealthTexture.render(renderer, BX + x*GAP + 10, BY + TEXT_GAP + y*GAP + 10);
         if(drop.second < 255) drops[{drop.first.first, drop.first.second}]++;
     }
 }
 
-bool Health::hasHealth(int x, int y) {
-    return drops.find({x,y}) != drops.end() && drops[{x,y}] != 0;
-}
-
-void Health::capture(int x, int y) {
-    drops[{x,y}] = 0;
+bool Health::hasHealth(int xx, int yy) {
+    bool found = false;
+    for(std::pair<std::pair<int,int>, int> drop : drops) {
+        int x = drop.first.first;
+        int y = drop.first.second;
+        int xxx = xx - (BX + x*GAP + 10);
+        int yyy = yy - (BY + TEXT_GAP + y*GAP + 10);
+        if(xxx >= 0 && xxx <= 20 && yyy >= 0 && yyy <= 20 && drops[{x,y}] != 0) {
+            found = true;
+            drops[{x,y}] = 0;
+        }
+    }
+    return found;
 }
 
 int Health::getNextTick() {

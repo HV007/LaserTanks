@@ -1,9 +1,5 @@
 #include "Main.h"
 
-//Screen dimension constants
-const int SCREEN_WIDTH = 2*BX + (2*MAZEX-3)*GAP;
-const int SCREEN_HEIGHT = 2*BY + (2*MAZEY-3)*GAP;
-
 bool init();
 bool loadMedia();
 void close();
@@ -13,12 +9,15 @@ SDL_Renderer* gRenderer = NULL;
 Texture gTextTexture;
 Texture gTankTexture;
 Texture gHeartTexture;
+Texture gPlayerTexture[4];
 
 Maze maze;
-Tank tank;
+// Tank tank;
+Player player(0);
 Health health;
 
 bool init() {
+	srand(time(0));
 	bool success = true;
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -69,7 +68,7 @@ bool loadMedia() {
 		printf( "Failed to render text texture!\n" );
 		success = false;
 	}
-	if(!gTankTexture.loadFromFile(gRenderer, "images/tank1.bmp")) {
+	if(!gTankTexture.loadFromFile(gRenderer, "images/tank1.png")) {
 		printf( "Failed to load tank texture!\n" );
 		success = false;
 	}
@@ -87,6 +86,8 @@ void close() {
 	gTankTexture.free();
 	gTextTexture.free();
 	gHeartTexture.free();
+
+	for(int i = 0; i < 4; i++) gPlayerTexture[i].free();
 
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
@@ -125,7 +126,8 @@ int main(int argc, char* args[]) {
 							timer.start();
 						}
 					}
-					tank.handleEvent(e);
+					player.handleEvent(e);
+					// tank.handleEvent(e);
 				}
 				SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
 				SDL_RenderClear(gRenderer);
@@ -135,9 +137,15 @@ int main(int argc, char* args[]) {
 					else maze.render(gRenderer, 255);
 				} else gTextTexture.render(gRenderer, (SCREEN_WIDTH - gTextTexture.getWidth())/2, (SCREEN_HEIGHT - gTextTexture.getHeight())/2);
 
-				if(start && timer.getTicks()>2500) {
-					tank.move(SCREEN_WIDTH,SCREEN_HEIGHT,maze);
-					tank.render(gRenderer, gTankTexture);
+				if(start && timer.getTicks() > 2500) {
+					player.move(maze, health);
+					player.render(gRenderer, gPlayerTexture, gTankTexture);
+					// tank.move(SCREEN_WIDTH, SCREEN_HEIGHT, maze);
+					// tank.render(gRenderer, gTankTexture);
+				}
+
+				if(start && timer.getTicks() >= player.getNextTick()) {
+					player.reduceHealth();
 				}
 
 				if(start && timer.getTicks() >= health.getNextTick()) {

@@ -15,7 +15,6 @@ public:
     void render(SDL_Renderer* renderer, Texture& mTankTexture);
 
     bool hasHealth(int x, int y);
-    void capture(int x, int y);
 
     int getNextTick();
 
