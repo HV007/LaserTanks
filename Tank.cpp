@@ -62,9 +62,9 @@ void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health,
 }
 
 void Tank::render(SDL_Renderer* renderer, Texture &mTankTexture) {
-    if(face == left) degree = 0;
-    else if(face == up) degree = 90;
-    else if(face == right) degree = 180;
+    if(face == up) degree = 0;
+    else if(face == right) degree = 90;
+    else if(face == down) degree = 180;
     else degree = 270;
 	mTankTexture.render(renderer, mPosX, mPosY, NULL, degree);
 }

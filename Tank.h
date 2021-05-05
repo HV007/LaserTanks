@@ -8,8 +8,8 @@ class Health;
 
 class Tank {
     public:
-		static const int TANK_WIDTH = 15;
-		static const int TANK_HEIGHT = 15;
+		static const int TANK_WIDTH = 24;
+		static const int TANK_HEIGHT = 24;
 
 		static const int TANK_VEL = 1;
 
