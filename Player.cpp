@@ -26,8 +26,8 @@ int Player::getNextTick() {
     return nextTick;
 }
 
-void Player::render(SDL_Renderer *renderer, Texture mPlayerTexture[], Texture& mTankTexture) {
-    tank->render(renderer, mTankTexture);
+void Player::render(SDL_Renderer *renderer, Texture mPlayerTexture[], Texture& mTankTexture, Texture& mBulletTexture) {
+    tank->render(renderer, mTankTexture, mBulletTexture);
     SDL_Color textColor;
     if(id == 0) {
         textColor = {255, 64, 0};

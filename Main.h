@@ -34,5 +34,6 @@ const int MAX_SIZE = 1000;
 #include "Tank.h"
 #include "Health.h"
 #include "Player.h"
+#include "Bullet.h"
 
 #endif

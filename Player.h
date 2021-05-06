@@ -14,7 +14,7 @@ public:
     void reduceHealth();
     int getHealth();
     int getNextTick();
-    void render(SDL_Renderer *renderer, Texture mPlayerTexture[], Texture& mTankTexture);
+    void render(SDL_Renderer *renderer, Texture mPlayerTexture[], Texture& mTankTexture, Texture& mBulletTexture);
 
 private:
     Tank* tank;

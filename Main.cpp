@@ -8,6 +8,7 @@ SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 Texture gTextTexture;
 Texture gTankTexture;
+Texture gBulletTexture;
 Texture gHeartTexture;
 Texture gPlayerTexture[4];
 
@@ -69,6 +70,10 @@ bool loadMedia() {
 		success = false;
 	}
 	if(!gTankTexture.loadFromFile(gRenderer, "images/tank1.bmp")) {
+		printf( "Failed to load tank texture!\n" );
+		success = false;
+	}
+	if(!gBulletTexture.loadFromFile(gRenderer, "images/bullet.bmp")) {
 		printf( "Failed to load tank texture!\n" );
 		success = false;
 	}
@@ -139,7 +144,7 @@ int main(int argc, char* args[]) {
 
 				if(start && timer.getTicks() > 2500) {
 					player.move(maze, health);
-					player.render(gRenderer, gPlayerTexture, gTankTexture);
+					player.render(gRenderer, gPlayerTexture, gTankTexture, gBulletTexture);
 					// tank.move(SCREEN_WIDTH, SCREEN_HEIGHT, maze);
 					// tank.render(gRenderer, gTankTexture);
 				}

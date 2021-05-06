@@ -7,6 +7,7 @@ Tank::Tank() {
     mPosY = GAP + BY + TEXT_GAP + 10;
     face = right;
     degree = 0;
+    bullets.clear();
 
     mVelX = 0;
     mVelY = 0;
@@ -34,6 +35,9 @@ void Tank::handleEvent(SDL_Event& e) {
                 else if (face==up) mVelY += TANK_VEL;
                 else mVelY -= TANK_VEL;
                 break;
+            case SDLK_SPACE:
+                fire();                // need to improve this(decide timing of bullet, space down or up)
+                break;
         }
     }
 }
@@ -59,12 +63,34 @@ void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health,
         }
         if(health.hasHealth(mPosX+TANK_WIDTH/2, mPosY+TANK_HEIGHT/2)) h = 100;
     }
+
+    int tot_bullets=bullets.size();
+    int counter=0;
+    while(counter<tot_bullets){
+        bullets[counter]->move(SCREEN_WIDTH, SCREEN_HEIGHT, maze);
+        bool active=bullets[counter]->active;
+        if (active) counter++;
+        else{
+            auto it=bullets.begin()+counter;
+            bullets.erase(it);
+            tot_bullets--;
+        }
+    }
 }
 
-void Tank::render(SDL_Renderer* renderer, Texture &mTankTexture) {
+void Tank::render(SDL_Renderer* renderer, Texture &mTankTexture, Texture &mBulletTexture) {
     if(face == up) degree = 0;
     else if(face == right) degree = 90;
     else if(face == down) degree = 180;
     else degree = 270;
 	mTankTexture.render(renderer, mPosX, mPosY, NULL, degree);
+    int tot_bullets=bullets.size();
+    for(int i=0;i<tot_bullets;i++){
+        bullets[i]->render(renderer,mBulletTexture);
+    }
+}
+
+void Tank::fire(){
+    Bullet* bullet=new Bullet(mPosX,mPosY,face);  
+    bullets.push_back(bullet);
 }
