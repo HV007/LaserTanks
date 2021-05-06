@@ -6,16 +6,15 @@ Bullet::Bullet(int x,int y, int f) {
     mPosX = x;
     mPosY = y;
     face=f;   
-    //std::cout<<f<<"\n";
     if (face==left) degree=0;                // depending on the image of bullet
     else if (face==up) degree=90;
     else if (face==right) degree=180;
     else degree=270;  
     active=true;
-    if (face=right) mVelX=BULLET_VEL;
+    if (face==right) mVelX=BULLET_VEL;
     else if (face==left) mVelX=-BULLET_VEL;
-    else if (face==up) mVelY=BULLET_VEL;
-    else mVelY=-BULLET_VEL;
+    else if (face==up) mVelY=-BULLET_VEL;
+    else mVelY=BULLET_VEL;
 }
 
 void Bullet::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze &maze) {
