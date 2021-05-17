@@ -91,6 +91,6 @@ void Tank::render(SDL_Renderer* renderer, Texture &mTankTexture, Texture &mBulle
 }
 
 void Tank::fire(){
-    Bullet* bullet=new Bullet(mPosX,mPosY,face);  
+    Bullet* bullet=new Bullet(mPosX+7,mPosY+7,face);  
     bullets.push_back(bullet);
 }

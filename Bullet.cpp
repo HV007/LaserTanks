@@ -6,9 +6,9 @@ Bullet::Bullet(int x,int y, int f) {
     mPosX = x;
     mPosY = y;
     face=f;   
-    if (face==left) degree=0;                // depending on the image of bullet
-    else if (face==up) degree=90;
-    else if (face==right) degree=180;
+    if (face==up) degree=0;                // depending on the image of bullet
+    else if (face==right) degree=90;
+    else if (face==down) degree=180;
     else degree=270;  
     active=true;
     if (face==right) mVelX=BULLET_VEL;
