@@ -73,7 +73,7 @@ bool loadMedia() {
 		printf( "Failed to load tank texture!\n" );
 		success = false;
 	}
-	if(!gBulletTexture.loadFromFile(gRenderer, "images/bullet.bmp")) {
+	if(!gBulletTexture.loadFromFile(gRenderer, "images/wifi.bmp")) {
 		printf( "Failed to load tank texture!\n" );
 		success = false;
 	}

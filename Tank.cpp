@@ -11,6 +11,7 @@ Tank::Tank() {
 
     mVelX = 0;
     mVelY = 0;
+    delay=0;
 }
 
 void Tank::handleEvent(SDL_Event& e) {
@@ -30,6 +31,7 @@ void Tank::handleEvent(SDL_Event& e) {
     } else if(e.type == SDL_KEYUP && e.key.repeat == 0) {
         switch(e.key.keysym.sym) {
             case SDLK_LSHIFT:
+                delay=0;
                 if (face==left) mVelX += TANK_VEL;
                 else if (face==right) mVelX -= TANK_VEL;
                 else if (face==up) mVelY += TANK_VEL;
@@ -43,6 +45,21 @@ void Tank::handleEvent(SDL_Event& e) {
 }
 
 void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health, int& h) {
+    int tot_bullets=bullets.size();
+    int counter=0;
+    while(counter<tot_bullets){
+        bullets[counter]->move(SCREEN_WIDTH, SCREEN_HEIGHT, maze);
+        bool active=bullets[counter]->active;
+        if (active) counter++;
+        else{
+            auto it=bullets.begin()+counter;
+            bullets.erase(it);
+            tot_bullets--;
+        }
+    }
+    delay++;
+    if (delay<3) return;
+    delay=0;
     for(int i = 0; i < std::abs(mVelX); i++) {
         if(mVelX > 0) mPosX++;
         else mPosX--;
@@ -64,18 +81,7 @@ void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health,
         if(health.hasHealth(mPosX+TANK_WIDTH/2, mPosY+TANK_HEIGHT/2)) h = 100;
     }
 
-    int tot_bullets=bullets.size();
-    int counter=0;
-    while(counter<tot_bullets){
-        bullets[counter]->move(SCREEN_WIDTH, SCREEN_HEIGHT, maze);
-        bool active=bullets[counter]->active;
-        if (active) counter++;
-        else{
-            auto it=bullets.begin()+counter;
-            bullets.erase(it);
-            tot_bullets--;
-        }
-    }
+    
 }
 
 void Tank::render(SDL_Renderer* renderer, Texture &mTankTexture, Texture &mBulletTexture) {
