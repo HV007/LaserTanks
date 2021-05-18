@@ -17,6 +17,7 @@ Player* players[4];
 Health health;
 Network network;
 Timer timer;
+std::vector<Bullet*> bullets;
 
 bool quit = false;
 bool start = false;
@@ -37,15 +38,27 @@ void processMessage(std::vector<std::string> messages) {
 			start = true;
 			timer.start();
 		} else if(code == 2) {
-			int x = message[2] - '0'; // not correct
-			int y = message[4] - '0';
+			int point = 2;
+			int x = 0;
+			int y = 0;
+			while((message[point]-'0') >= 0 && (message[point]-'0') <= 9) {
+				x *= 10;
+				x += (message[point]-'0');
+				point++;
+			}
+			point++;
+			while((message[point]-'0') >= 0 && (message[point]-'0') <= 9) {
+				y *= 10;
+				y += (message[point]-'0');
+				point++;
+			}
 			health.createHealth(x, y);
 		} else if(code == 3) {
 			int id = message[2] - '0';
 			int a = message[4] - '0';
 			int b = message[6] - '0';
 			int c = message[8] - '0';
-			players[id]->handleEvent(a, b, c);
+			players[id]->handleEvent(a, b, c, bullets);
 		} else if(code == 7) {
 			int id = message[2] - '0';
 			int point = 4;
@@ -66,6 +79,44 @@ void processMessage(std::vector<std::string> messages) {
 			players[id]->increaseHealth();
 		}
 	}
+}
+
+void moveBullets() {
+	int tot_bullets=bullets.size();
+    int counter=0;
+    while(counter<tot_bullets){
+        bullets[counter]->move(SCREEN_WIDTH, SCREEN_HEIGHT, maze);
+        bool active=bullets[counter]->active;
+        if (active) counter++;
+        else{
+            auto it=bullets.begin()+counter;
+            bullets.erase(it);
+            tot_bullets--;
+        }
+    }
+}
+
+bool checkCollision(int posX, int posY, int id) {
+	int counter = 0;
+	for(Bullet* b : bullets) {
+		bool hit = true;
+		int X = b->mPosX, Y = b->mPosY;
+		if(X > posX+Tank::TANK_WIDTH || posX > X+Bullet::BULLET_WIDTH) return false;
+		if(Y > posY+Tank::TANK_HEIGHT || posY > Y+Bullet::BULLET_HEIGHT) return false;
+		if(b->id == id) return false;
+		if(hit) {
+			b->active = false;
+			return true;
+		}
+	}
+	return false;
+}
+
+void renderBullets() {
+	int tot_bullets=bullets.size();
+    for(int i=0;i<tot_bullets;i++){
+        bullets[i]->render(gRenderer, gBulletTexture);
+    }
 }
 
 bool init() {
@@ -202,6 +253,16 @@ int main(int argc, char* args[]) {
 					for(int i = 0; i < tot_players; i++) {
 						players[i]->move(maze, health, network, my_id);
 						players[i]->render(gRenderer, gPlayerTexture, gTankTexture, gBulletTexture);
+					}
+					moveBullets();
+					renderBullets();
+				}
+
+				if(start) {
+					for(int i = 0; i < tot_players; i++) {
+						if(checkCollision(players[i]->getX(), players[i]->getY(), i)) {
+							players[i]->bulletHit();
+						}
 					}
 				}
 

@@ -5,8 +5,8 @@ Player::Player(int id): id(id), nextTick(3500) {
     tank = new Tank();
 }
 
-void Player::handleEvent(int a, int b, int c) {
-    tank->handleEvent(a, b, c);
+void Player::handleEvent(int a, int b, int c, std::vector<Bullet*> &bullets) {
+    tank->handleEvent(a, b, c, bullets, id);
 }
 
 void Player::move(Maze& maze, Health& h, Network& network, int my_id) {
@@ -57,4 +57,16 @@ void Player::render(SDL_Renderer *renderer, Texture mPlayerTexture[], Texture& m
     } else {
         mPlayerTexture[id].render(renderer, SCREEN_WIDTH - mPlayerTexture[id].getWidth() - BX, SCREEN_HEIGHT - mPlayerTexture[id].getHeight() - BY);
     }
+}
+
+int Player::getX() {
+    return tank->mPosX;
+}
+
+int Player::getY() {
+    return tank->mPosY;
+}
+
+void Player::bulletHit() {
+    health -= 20;
 }

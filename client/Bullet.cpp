@@ -2,10 +2,11 @@
 
 enum direction {left,up,right,down};
 
-Bullet::Bullet(int x,int y, int f) {
+Bullet::Bullet(int x,int y, int f, int originId) {
     mPosX = x;
     mPosY = y;
-    face=f;   
+    face=f;  
+    id = originId;
     if (face==up) degree=0;                // depending on the image of bullet
     else if (face==right) degree=90;
     else if (face==down) degree=180;
@@ -38,6 +39,5 @@ void Bullet::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze &maze) {
 }
 
 void Bullet::render(SDL_Renderer* renderer, Texture &mBulletTexture) {
-    std::cout<<"Here\n";
 	mBulletTexture.render(renderer, mPosX, mPosY, NULL, degree);
 }
