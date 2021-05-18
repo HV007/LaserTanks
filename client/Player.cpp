@@ -6,7 +6,7 @@ Player::Player(int id): id(id), nextTick(3500) {
 }
 
 void Player::handleEvent(int a, int b, int c, std::vector<Bullet*> &bullets, Mix_Chunk *gBulletSound) {
-    tank->handleEvent(a, b, c, bullets, id);
+    tank->handleEvent(a, b, c, bullets, id, gBulletSound);
 }
 
 void Player::move(Maze& maze, Health& h, Network& network, int my_id, Mix_Chunk *gHealthPickSound) {

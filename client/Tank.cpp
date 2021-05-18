@@ -51,7 +51,7 @@ void Tank::handleEvent(int a, int b, int c, std::vector<Bullet*> &bullets, int i
 void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health, Network& network, int my_id, Mix_Chunk *gHealthPickSound) {
     delay++;
     delay_time++;
-    if (delay_time>20){                  // tune this
+    if (delay_time>30){                  // tune this
         delay_time=0;
         if (check_delay>2) check_delay--;   // tune this
     }
