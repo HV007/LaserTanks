@@ -5,17 +5,21 @@ Player::Player(int id): id(id), nextTick(3500) {
     tank = new Tank();
 }
 
-void Player::handleEvent(SDL_Event &e) {
-    tank->handleEvent(e);
+void Player::handleEvent(int a, int b, int c) {
+    tank->handleEvent(a, b, c);
 }
 
-void Player::move(Maze& maze, Health& h) {
-    tank->move(SCREEN_WIDTH, SCREEN_HEIGHT, maze, h, health);
+void Player::move(Maze& maze, Health& h, Network& network, int my_id) {
+    tank->move(SCREEN_WIDTH, SCREEN_HEIGHT, maze, h, network, my_id);
 }
 
 void Player::reduceHealth() {
     nextTick += 1000;
     if(health > 0) health--;
+}
+
+void Player::increaseHealth() {
+    health = 100;
 }
 
 int Player::getHealth() {

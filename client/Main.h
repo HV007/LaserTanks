@@ -15,18 +15,21 @@
 
 #define TOLERANCE 0
 
-//Screen dimension constants
-const int SCREEN_WIDTH = 2*BX + MAZEX*GAP;
-const int SCREEN_HEIGHT = 2*BY + MAZEY*GAP + 2*TEXT_GAP;
-
 #define HEALTH_DROP_INCREMENT 1000
-
-const int MAX_SIZE = 1000;
 
 #include <bits/stdc++.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_net.h>
+
+//Screen dimension constants
+const int SCREEN_WIDTH = 2*BX + MAZEX*GAP;
+const int SCREEN_HEIGHT = 2*BY + MAZEY*GAP + 2*TEXT_GAP;
+
+const std::string IP_ADDRESS = "127.0.0.1";
+
+const int MAX_SIZE = 1000;
 
 #include "Maze.h"
 #include "Timer.h"
@@ -35,5 +38,6 @@ const int MAX_SIZE = 1000;
 #include "Health.h"
 #include "Player.h"
 #include "Bullet.h"
+#include "Network.h"
 
 #endif

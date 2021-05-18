@@ -19,7 +19,8 @@ void Maze::initialise() {
 	}
 }
 
-void Maze::generate() {
+void Maze::generate(int seed) {
+	srand(seed);
     int xcur = 1, ycur = 1;
     MAZE[xcur][ycur].in = 1;
     numin++;

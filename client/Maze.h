@@ -16,7 +16,7 @@ public:
     Maze(int xsize, int ysize);
 
     void initialise();
-    void generate();
+    void generate(int seed);
     void render(SDL_Renderer* renderer, Uint8 opacity);
     bool check_wall(int x,int y);
 

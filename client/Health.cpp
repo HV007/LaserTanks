@@ -9,11 +9,15 @@ void Health::initialise() {
     drops.clear();
 }
 
-void Health::generate() {
+std::pair<int, int> Health::generate() {
     generated++;
     nextTick += generated*HEALTH_DROP_INCREMENT;
     int x = rand()%xsize;
     int y = rand()%ysize;
+    return {x,y};
+}
+
+void Health::createHealth(int x, int y) {
     if(x == 0 || y == 0 || x == xsize-1 || y == ysize-1) return;
     if(drops.find({x,y}) == drops.end() || drops[{x,y}] == 0) drops[{x,y}] = 1;
     std::cout << "Health Created: " << x << " " << y << "\n";
@@ -40,10 +44,21 @@ bool Health::hasHealth(int xx, int yy) {
         int yyy = yy - (BY + TEXT_GAP + y*GAP + 10);
         if(xxx >= 0 && xxx <= 20 && yyy >= 0 && yyy <= 20 && drops[{x,y}] != 0) {
             found = true;
-            drops[{x,y}] = 0;
         }
     }
     return found;
+}
+
+void Health::collectHealth(int xx, int yy) {
+    for(std::pair<std::pair<int,int>, int> drop : drops) {
+        int x = drop.first.first;
+        int y = drop.first.second;
+        int xxx = xx - (BX + x*GAP + 10);
+        int yyy = yy - (BY + TEXT_GAP + y*GAP + 10);
+        if(xxx >= 0 && xxx <= 20 && yyy >= 0 && yyy <= 20 && drops[{x,y}] != 0) {
+            drops[{x,y}] = 0;
+        }
+    }
 }
 
 int Health::getNextTick() {

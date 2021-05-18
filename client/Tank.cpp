@@ -14,19 +14,19 @@ Tank::Tank() {
     delay=0;
 }
 
-void Tank::handleEvent(SDL_Event& e) {
-	if(e.type == SDL_KEYDOWN && e.key.repeat == 0) {
-        switch(e.key.keysym.sym) {
-            case SDLK_LSHIFT:
+void Tank::handleEvent(int a, int b, int c) {
+	if(a == 1 && b == 0) {
+        switch(c) {
+            case 4:
                 if (face == left) mVelX -= TANK_VEL;
                 else if (face == right) mVelX += TANK_VEL;
                 else if (face == up) mVelY -= TANK_VEL;
                 else mVelY += TANK_VEL;
                 break;
-            case SDLK_UP: face = up; break;
-            case SDLK_DOWN: face = down; break;
-            case SDLK_LEFT: face = left; break;
-            case SDLK_RIGHT: face = right; break;
+            case 1: face = up; break;
+            case 3: face = down; break;
+            case 0: face = left; break;
+            case 2: face = right; break;
         }
     } else if(e.type == SDL_KEYUP && e.key.repeat == 0) {
         switch(e.key.keysym.sym) {
@@ -35,6 +35,12 @@ void Tank::handleEvent(SDL_Event& e) {
                 if (face==left) mVelX += TANK_VEL;
                 else if (face==right) mVelX -= TANK_VEL;
                 else if (face==up) mVelY += TANK_VEL;
+    } else if(a == 0 && b == 0) {
+        switch(c) {
+            case 4:
+                if(face == left) mVelX += TANK_VEL;
+                else if(face == right) mVelX -= TANK_VEL;
+                else if(face == up) mVelY += TANK_VEL;
                 else mVelY -= TANK_VEL;
                 break;
             case SDLK_SPACE:
@@ -60,6 +66,7 @@ void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health,
     delay++;
     if (delay<3) return;
     delay=0;
+void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health, Network& network, int my_id) {
     for(int i = 0; i < std::abs(mVelX); i++) {
         if(mVelX > 0) mPosX++;
         else mPosX--;
@@ -68,7 +75,10 @@ void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health,
             else mPosX++;
             break;
         }
-        if(health.hasHealth(mPosX+TANK_WIDTH/2, mPosY+TANK_HEIGHT/2)) h = 100;
+        if(health.hasHealth(mPosX+TANK_WIDTH/2, mPosY+TANK_HEIGHT/2)) {
+            std::string message = "7 " + std::to_string(my_id) + " " + std::to_string(mPosX+TANK_WIDTH/2) + " " + std::to_string(mPosY+TANK_HEIGHT/2) + "\n";
+            network.sendMessage(message);
+        }
     }
     for(int i = 0; i < std::abs(mVelY); i++) {
         if(mVelY > 0) mPosY++;
@@ -78,7 +88,10 @@ void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health,
             else mPosY++;
             break;
         }
-        if(health.hasHealth(mPosX+TANK_WIDTH/2, mPosY+TANK_HEIGHT/2)) h = 100;
+        if(health.hasHealth(mPosX+TANK_WIDTH/2, mPosY+TANK_HEIGHT/2)) {
+            std::string message = "7 " + std::to_string(my_id) + " " + std::to_string(mPosX+TANK_WIDTH/2) + " " + std::to_string(mPosY+TANK_HEIGHT/2) + "\n";
+            network.sendMessage(message);
+        }
     }
 
     
