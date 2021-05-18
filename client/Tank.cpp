@@ -7,7 +7,6 @@ Tank::Tank() {
     mPosY = GAP + BY + TEXT_GAP + 10;
     face = right;
     degree = 0;
-    bullets.clear();
 
     mVelX = 0;
     mVelY = 0;
@@ -16,7 +15,7 @@ Tank::Tank() {
     delay_time=0;
 }
 
-void Tank::handleEvent(int a, int b, int c, Mix_Chunk *gBulletSound) {
+void Tank::handleEvent(int a, int b, int c, std::vector<Bullet*> &bullets, int id, Mix_Chunk *gBulletSound) {
 	if(a == 1 && b == 0) {
         switch(c) {
             case 4:
@@ -25,10 +24,10 @@ void Tank::handleEvent(int a, int b, int c, Mix_Chunk *gBulletSound) {
                 else if (face == up) mVelY -= TANK_VEL;
                 else mVelY += TANK_VEL;
                 break;
-            case 1: face = up; break;
-            case 3: face = down; break;
-            case 0: face = left; break;
-            case 2: face = right; break;
+            case 1: face = up; if(mVelX != 0 || mVelY != 0) {mVelX = 0; mVelY = -TANK_VEL;} break;
+            case 3: face = down; if(mVelX != 0 || mVelY != 0) {mVelX = 0; mVelY = TANK_VEL;} break;
+            case 0: face = left; if(mVelX != 0 || mVelY != 0) {mVelX = -TANK_VEL; mVelY = 0;} break;
+            case 2: face = right; if(mVelX != 0 || mVelY != 0) {mVelX = TANK_VEL; mVelY = 0;} break;
         }
     }  else if(a == 0 && b == 0) {
         switch(c) {
@@ -43,26 +42,13 @@ void Tank::handleEvent(int a, int b, int c, Mix_Chunk *gBulletSound) {
                 break;
             case 5:
                 Mix_PlayChannel( -1, gBulletSound, 0 );
-                fire();                // need to improve this(decide timing of bullet, space down or up)
+                fire(bullets, id);                // need to improve this(decide timing of bullet, space down or up)
                 break;
         }
     }
 }
 
-    
 void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health, Network& network, int my_id, Mix_Chunk *gHealthPickSound) {
-    int tot_bullets=bullets.size();
-    int counter=0;
-    while(counter<tot_bullets){
-        bullets[counter]->move(SCREEN_WIDTH, SCREEN_HEIGHT, maze);
-        bool active=bullets[counter]->active;
-        if (active) counter++;
-        else{
-            auto it=bullets.begin()+counter;
-            bullets.erase(it);
-            tot_bullets--;
-        }
-    }
     delay++;
     delay_time++;
     if (delay_time>20){                  // tune this
@@ -109,13 +95,9 @@ void Tank::render(SDL_Renderer* renderer, Texture &mTankTexture, Texture &mBulle
     else if(face == down) degree = 180;
     else degree = 270;
 	mTankTexture.render(renderer, mPosX, mPosY, NULL, degree);
-    int tot_bullets=bullets.size();
-    for(int i=0;i<tot_bullets;i++){
-        bullets[i]->render(renderer,mBulletTexture);
-    }
 }
 
-void Tank::fire(){
-    Bullet* bullet=new Bullet(mPosX+7,mPosY+7,face);  
+void Tank::fire(std::vector<Bullet*> &bullets, int id){
+    Bullet* bullet=new Bullet(mPosX+7,mPosY+7,face, id);  
     bullets.push_back(bullet);
 }

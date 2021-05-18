@@ -18,17 +18,16 @@ class Tank {
 		Tank();
 
 		void render(SDL_Renderer* renderer, Texture &mTankTexture, Texture &mBulletTexture);
-		void fire();
-		void handleEvent(int a, int b, int c, Mix_Chunk *gBulletSound);
+		void fire(std::vector<Bullet*> &bullets, int id);
+		void handleEvent(int a, int b, int c, std::vector<Bullet*> &bullets, int id, Mix_Chunk *gBulletSound);
 		void move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health, Network& network, int my_id, Mix_Chunk *gHealthPickSound);
+		int mPosX, mPosY;
 
     private:
-		int mPosX, mPosY;
 		int mVelX, mVelY;
 		int face,degree;
 		int delay;
 		int check_delay,delay_time;
-		std::vector<Bullet *> bullets;
 };
 
 #endif

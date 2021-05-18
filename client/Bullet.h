@@ -12,13 +12,14 @@ class Bullet {
 
 		static const int BULLET_VEL = 1;
 
-		Bullet(int x,int y, int f);
+		Bullet(int x,int y, int f, int originId);
 
 		void move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze &maze);
 		void render(SDL_Renderer* renderer, Texture &mBulletTexture);
 		bool active;                          // check private or public
 		int face,degree;
 		int mPosX, mPosY;
+		int id;
 
     private:
 		int mVelX, mVelY;

@@ -2,10 +2,11 @@
 
 enum direction {left,up,right,down};
 
-Bullet::Bullet(int x,int y, int f) {
+Bullet::Bullet(int x,int y, int f, int originId) {
     mPosX = x;
     mPosY = y;
-    face=f;   
+    face=f;  
+    id = originId;
     if (face==up) degree=0;                // depending on the image of bullet
     else if (face==right) degree=90;
     else if (face==down) degree=180;
