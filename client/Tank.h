@@ -17,13 +17,10 @@ class Tank {
 
 		Tank();
 
-		void handleEvent(SDL_Event& e);
-		void move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health, int& h);
 		void render(SDL_Renderer* renderer, Texture &mTankTexture, Texture &mBulletTexture);
 		void fire();
 		void handleEvent(int a, int b, int c);
 		void move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health, Network& network, int my_id);
-		void render(SDL_Renderer* renderer, Texture &mTankTexture);
 
     private:
 		int mPosX, mPosY;
@@ -31,7 +28,6 @@ class Tank {
 		int face,degree;
 		int delay;
 		std::vector<Bullet *> bullets;
-		int face, degree;
 };
 
 #endif

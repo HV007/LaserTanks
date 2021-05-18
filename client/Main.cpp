@@ -201,7 +201,7 @@ int main(int argc, char* args[]) {
 				if(start && timer.getTicks() > 2500) {
 					for(int i = 0; i < tot_players; i++) {
 						players[i]->move(maze, health, network, my_id);
-						players[i]->render(gRenderer, gPlayerTexture, gTankTexture);
+						players[i]->render(gRenderer, gPlayerTexture, gTankTexture, gBulletTexture);
 					}
 				}
 

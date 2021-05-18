@@ -71,12 +71,16 @@ void Network::handleEvent(SDL_Event& e, int my_id) {
             case SDLK_DOWN: c = 3; break;
             case SDLK_LEFT: c = 0; break;
             case SDLK_RIGHT: c = 2; break;
+            case SDLK_SPACE: c = 5; break;
         }
     } else if(e.type == SDL_KEYUP && e.key.repeat == 0) {
         a = 0; b = 0;
         switch(e.key.keysym.sym) {
             case SDLK_LSHIFT:
                 c = 4;
+                break;
+            case SDLK_SPACE:
+                c = 5;
                 break;
         }
     }

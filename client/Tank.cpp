@@ -28,29 +28,25 @@ void Tank::handleEvent(int a, int b, int c) {
             case 0: face = left; break;
             case 2: face = right; break;
         }
-    } else if(e.type == SDL_KEYUP && e.key.repeat == 0) {
-        switch(e.key.keysym.sym) {
-            case SDLK_LSHIFT:
-                delay=0;
-                if (face==left) mVelX += TANK_VEL;
-                else if (face==right) mVelX -= TANK_VEL;
-                else if (face==up) mVelY += TANK_VEL;
-    } else if(a == 0 && b == 0) {
+    }  else if(a == 0 && b == 0) {
         switch(c) {
             case 4:
+                delay=0;
                 if(face == left) mVelX += TANK_VEL;
                 else if(face == right) mVelX -= TANK_VEL;
                 else if(face == up) mVelY += TANK_VEL;
                 else mVelY -= TANK_VEL;
                 break;
-            case SDLK_SPACE:
+            case 5:
+                std::cout<<"Here\n";
                 fire();                // need to improve this(decide timing of bullet, space down or up)
                 break;
         }
     }
 }
 
-void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health, int& h) {
+    
+void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health, Network& network, int my_id) {
     int tot_bullets=bullets.size();
     int counter=0;
     while(counter<tot_bullets){
@@ -66,7 +62,6 @@ void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health,
     delay++;
     if (delay<3) return;
     delay=0;
-void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health, Network& network, int my_id) {
     for(int i = 0; i < std::abs(mVelX); i++) {
         if(mVelX > 0) mPosX++;
         else mPosX--;
