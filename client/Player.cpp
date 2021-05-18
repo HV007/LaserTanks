@@ -5,12 +5,12 @@ Player::Player(int id): id(id), nextTick(3500) {
     tank = new Tank();
 }
 
-void Player::handleEvent(int a, int b, int c) {
-    tank->handleEvent(a, b, c);
+void Player::handleEvent(int a, int b, int c, Mix_Chunk *gBulletSound) {
+    tank->handleEvent(a, b, c, gBulletSound);
 }
 
-void Player::move(Maze& maze, Health& h, Network& network, int my_id) {
-    tank->move(SCREEN_WIDTH, SCREEN_HEIGHT, maze, h, network, my_id);
+void Player::move(Maze& maze, Health& h, Network& network, int my_id, Mix_Chunk *gHealthPickSound) {
+    tank->move(SCREEN_WIDTH, SCREEN_HEIGHT, maze, h, network, my_id, gHealthPickSound);
 }
 
 void Player::reduceHealth() {

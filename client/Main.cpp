@@ -11,6 +11,13 @@ Texture gTankTexture;
 Texture gBulletTexture;
 Texture gHeartTexture;
 Texture gPlayerTexture[4];
+//The music that will be played
+Mix_Music *gGameMusic = NULL;  
+//The sound effects that will be used
+Mix_Chunk *gBulletSound = NULL;
+Mix_Chunk *gChangeTabSound = NULL;
+Mix_Chunk *gHealthPickSound = NULL;
+Mix_Chunk *gPlayerLostSound = NULL;
 
 Maze maze;
 Player* players[4];
@@ -45,7 +52,7 @@ void processMessage(std::vector<std::string> messages) {
 			int a = message[4] - '0';
 			int b = message[6] - '0';
 			int c = message[8] - '0';
-			players[id]->handleEvent(a, b, c);
+			players[id]->handleEvent(a, b, c, gBulletSound);
 		} else if(code == 7) {
 			int id = message[2] - '0';
 			int point = 4;
@@ -89,6 +96,12 @@ bool init() {
 			printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
 			success = false;
 			return false;
+		}
+		//Initialize SDL_mixer
+		if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+		{
+			printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+			success = false;
 		}
 		if(!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0")) {
 			printf("Warning: Linear texture filtering not enabled!");
@@ -135,6 +148,37 @@ bool loadMedia() {
 		printf( "Failed to load tank texture!\n" );
 		success = false;
 	}
+	//Load music
+	// gGameMusic = Mix_LoadMUS( "sounds/game_music.wav" );
+	// if( gGameMusic == NULL )
+	// {
+	// 	printf( "Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError() );
+	// 	success = false;
+	// }
+	gBulletSound = Mix_LoadWAV( "sounds/bullet_sound.wav" );
+	if( gBulletSound == NULL )
+	{
+		printf( "Failed to load high sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+	gChangeTabSound = Mix_LoadWAV( "sounds/change_tab.wav" );
+	if( gChangeTabSound == NULL )
+	{
+		printf( "Failed to load high sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+	gHealthPickSound = Mix_LoadWAV( "sounds/health_pick.wav" );
+	if( gHealthPickSound == NULL )
+	{
+		printf( "Failed to load high sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
+	gPlayerLostSound = Mix_LoadWAV( "sounds/lost.wav" );
+	if( gPlayerLostSound == NULL )
+	{
+		printf( "Failed to load high sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
 
 	return success;
 }
@@ -143,6 +187,17 @@ void close() {
 	gTankTexture.free();
 	gTextTexture.free();
 	gHeartTexture.free();
+	Mix_FreeChunk( gBulletSound );
+	gBulletSound = NULL;
+	Mix_FreeChunk( gChangeTabSound );
+	gChangeTabSound = NULL;
+	Mix_FreeChunk( gHealthPickSound );
+	gHealthPickSound = NULL;
+	Mix_FreeChunk( gPlayerLostSound );
+	gPlayerLostSound = NULL;
+	//Free the music
+	Mix_FreeMusic( gGameMusic );
+	gGameMusic = NULL;
 
 	for(int i = 0; i < 4; i++) gPlayerTexture[i].free();
 
@@ -151,6 +206,8 @@ void close() {
 	gWindow = NULL;
 	gRenderer = NULL;
 
+	//Quit SDL subsystems
+	Mix_Quit();
 	IMG_Quit();
 	TTF_Quit();
 	SDL_Quit();
@@ -175,6 +232,7 @@ int main(int argc, char* args[]) {
 						quit = true;
 					} else if(e.type == SDL_KEYDOWN) {
 						if(e.key.keysym.sym == SDLK_RETURN) {
+							Mix_PlayChannel( -1, gChangeTabSound, 0 );
 							network.connectToServer();
 							connect = true;
 							SDL_Color textColor = {255, 64, 0};
@@ -200,7 +258,7 @@ int main(int argc, char* args[]) {
 
 				if(start && timer.getTicks() > 2500) {
 					for(int i = 0; i < tot_players; i++) {
-						players[i]->move(maze, health, network, my_id);
+						players[i]->move(maze, health, network, my_id, gHealthPickSound);
 						players[i]->render(gRenderer, gPlayerTexture, gTankTexture, gBulletTexture);
 					}
 				}

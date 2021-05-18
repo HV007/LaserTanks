@@ -38,6 +38,5 @@ void Bullet::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze &maze) {
 }
 
 void Bullet::render(SDL_Renderer* renderer, Texture &mBulletTexture) {
-    std::cout<<"Here\n";
 	mBulletTexture.render(renderer, mPosX, mPosY, NULL, degree);
 }

@@ -22,6 +22,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_net.h>
+#include <SDL2/SDL_mixer.h>
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 2*BX + MAZEX*GAP;

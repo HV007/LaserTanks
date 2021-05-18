@@ -19,8 +19,8 @@ class Tank {
 
 		void render(SDL_Renderer* renderer, Texture &mTankTexture, Texture &mBulletTexture);
 		void fire();
-		void handleEvent(int a, int b, int c);
-		void move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health, Network& network, int my_id);
+		void handleEvent(int a, int b, int c, Mix_Chunk *gBulletSound);
+		void move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health, Network& network, int my_id, Mix_Chunk *gHealthPickSound);
 
     private:
 		int mPosX, mPosY;
