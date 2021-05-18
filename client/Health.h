@@ -11,11 +11,12 @@ public:
     Health(int xsize, int ysize);
 
     void initialise();
-    void generate();
+    std::pair<int, int> generate();
+    void createHealth(int x, int y);
+    void collectHealth(int x, int y);
     void render(SDL_Renderer* renderer, Texture& mTankTexture);
 
     bool hasHealth(int x, int y);
-    void capture(int x, int y);
 
     int getNextTick();
 
