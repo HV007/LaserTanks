@@ -200,7 +200,7 @@ bool loadMedia() {
 		success = false;
 	}
 	//Load music
-	gGameMusic = Mix_LoadMUS( "sounds/game_music.wav" );
+	gGameMusic = Mix_LoadMUS( "sounds/game_music_low.wav" );
 	if( gGameMusic == NULL )
 	{
 		printf( "Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError() );
@@ -219,6 +219,7 @@ bool loadMedia() {
 		success = false;
 	}
 	gHealthPickSound = Mix_LoadWAV( "sounds/health_pick.wav" );
+	Mix_VolumeChunk(gHealthPickSound,30);
 	if( gHealthPickSound == NULL )
 	{
 		printf( "Failed to load high sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
