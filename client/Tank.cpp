@@ -38,7 +38,6 @@ void Tank::handleEvent(int a, int b, int c) {
                 else mVelY -= TANK_VEL;
                 break;
             case 5:
-                std::cout<<"Here\n";
                 fire();                // need to improve this(decide timing of bullet, space down or up)
                 break;
         }

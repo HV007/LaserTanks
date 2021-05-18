@@ -11,6 +11,7 @@ Bullet::Bullet(int x,int y, int f) {
     else if (face==down) degree=180;
     else degree=270;  
     active=true;
+    mVelX=0,mVelY=0;
     if (face==right) mVelX=BULLET_VEL;
     else if (face==left) mVelX=-BULLET_VEL;
     else if (face==up) mVelY=-BULLET_VEL;
@@ -37,5 +38,6 @@ void Bullet::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze &maze) {
 }
 
 void Bullet::render(SDL_Renderer* renderer, Texture &mBulletTexture) {
+    std::cout<<"Here\n";
 	mBulletTexture.render(renderer, mPosX, mPosY, NULL, degree);
 }
