@@ -149,12 +149,12 @@ bool loadMedia() {
 		success = false;
 	}
 	//Load music
-	// gGameMusic = Mix_LoadMUS( "sounds/game_music.wav" );
-	// if( gGameMusic == NULL )
-	// {
-	// 	printf( "Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError() );
-	// 	success = false;
-	// }
+	gGameMusic = Mix_LoadMUS( "sounds/game_music.wav" );
+	if( gGameMusic == NULL )
+	{
+		printf( "Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
 	gBulletSound = Mix_LoadWAV( "sounds/bullet_sound.wav" );
 	if( gBulletSound == NULL )
 	{
@@ -253,7 +253,14 @@ int main(int argc, char* args[]) {
 
 				if(start) {
 					if(timer.getTicks() <= 2000) maze.render(gRenderer, 255*timer.getTicks()/2000);
-					else maze.render(gRenderer, 255);
+					else {
+						if( Mix_PlayingMusic() == 0 )
+						{
+							//Play the music
+							Mix_PlayMusic( gGameMusic, -1 );
+						}
+						maze.render(gRenderer, 255);
+					}
 				} else gTextTexture.render(gRenderer, (SCREEN_WIDTH - gTextTexture.getWidth())/2, (SCREEN_HEIGHT - gTextTexture.getHeight())/2);
 
 				if(start && timer.getTicks() > 2500) {
