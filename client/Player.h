@@ -4,14 +4,16 @@
 #include "Main.h"
 
 class Tank;
+class Network;
 
 class Player {
 public:
     Player(int id);
 
-    void handleEvent(SDL_Event& e);
-    void move(Maze& maze, Health& h);
+    void handleEvent(int a, int b, int c);
+    void move(Maze& maze, Health& h, Network& network, int my_id);
     void reduceHealth();
+    void increaseHealth();
     int getHealth();
     int getNextTick();
     void render(SDL_Renderer *renderer, Texture mPlayerTexture[], Texture& mTankTexture);
