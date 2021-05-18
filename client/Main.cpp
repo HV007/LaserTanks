@@ -155,7 +155,7 @@ bool loadMedia() {
 		printf( "Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError() );
 		success = false;
 	}
-	gBulletSound = Mix_LoadWAV( "sounds/bullet_sound.wav" );
+	gBulletSound = Mix_LoadWAV( "sounds/wave_sound.wav" );
 	if( gBulletSound == NULL )
 	{
 		printf( "Failed to load high sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
