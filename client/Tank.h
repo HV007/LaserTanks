@@ -27,6 +27,7 @@ class Tank {
 		int mVelX, mVelY;
 		int face,degree;
 		int delay;
+		int check_delay,delay_time;
 		std::vector<Bullet *> bullets;
 };
 

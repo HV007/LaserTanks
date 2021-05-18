@@ -12,6 +12,8 @@ Tank::Tank() {
     mVelX = 0;
     mVelY = 0;
     delay=0;
+    check_delay=3;
+    delay_time=0;
 }
 
 void Tank::handleEvent(int a, int b, int c, Mix_Chunk *gBulletSound) {
@@ -32,6 +34,8 @@ void Tank::handleEvent(int a, int b, int c, Mix_Chunk *gBulletSound) {
         switch(c) {
             case 4:
                 delay=0;
+                check_delay=3;
+                delay_time=0;
                 if(face == left) mVelX += TANK_VEL;
                 else if(face == right) mVelX -= TANK_VEL;
                 else if(face == up) mVelY += TANK_VEL;
@@ -60,7 +64,12 @@ void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health,
         }
     }
     delay++;
-    if (delay<3) return;
+    delay_time++;
+    if (delay_time>20){                  // tune this
+        delay_time=0;
+        if (check_delay>2) check_delay--;   // tune this
+    }
+    if (delay<check_delay) return;
     delay=0;
     for(int i = 0; i < std::abs(mVelX); i++) {
         if(mVelX > 0) mPosX++;
