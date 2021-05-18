@@ -22,10 +22,10 @@ void Tank::handleEvent(int a, int b, int c, std::vector<Bullet*> &bullets, int i
                 else if (face == up) mVelY -= TANK_VEL;
                 else mVelY += TANK_VEL;
                 break;
-            case 1: face = up; break;
-            case 3: face = down; break;
-            case 0: face = left; break;
-            case 2: face = right; break;
+            case 1: face = up; if(mVelX != 0 || mVelY != 0) {mVelX = 0; mVelY = -TANK_VEL;} break;
+            case 3: face = down; if(mVelX != 0 || mVelY != 0) {mVelX = 0; mVelY = TANK_VEL;} break;
+            case 0: face = left; if(mVelX != 0 || mVelY != 0) {mVelX = -TANK_VEL; mVelY = 0;} break;
+            case 2: face = right; if(mVelX != 0 || mVelY != 0) {mVelX = TANK_VEL; mVelY = 0;} break;
         }
     }  else if(a == 0 && b == 0) {
         switch(c) {
