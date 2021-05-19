@@ -28,7 +28,7 @@
 const int SCREEN_WIDTH = 2*BX + MAZEX*GAP;
 const int SCREEN_HEIGHT = 2*BY + MAZEY*GAP + 2*TEXT_GAP;
 
-const std::string IP_ADDRESS = "127.0.0.1";
+const std::string IP_ADDRESS = "223.226.219.69";
 
 const int MAX_SIZE = 1000;
 

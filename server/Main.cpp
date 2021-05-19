@@ -65,7 +65,6 @@ int main(int argc, char* args[]) {
 	}
 
 	network.sendAll("-1\n");
-
 	network.close();
 	SDLNet_Quit();
 	SDL_Quit();

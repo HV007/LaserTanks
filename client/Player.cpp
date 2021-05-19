@@ -15,7 +15,7 @@ void Player::move(Maze& maze, Health& h, Network& network, int my_id, Mix_Chunk 
 
 void Player::reduceHealth() {
     nextTick += 1000;
-    if(health > 0) health-=10;
+    if(health > 0) health--;
 }
 
 void Player::increaseHealth() {
