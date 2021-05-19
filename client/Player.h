@@ -17,10 +17,12 @@ public:
     void increaseHealth();
     int getHealth();
     int getNextTick();
-    void render(SDL_Renderer *renderer, Texture mPlayerTexture[], Texture mTankTexture[], Texture& mBulletTexture);
+    void render(SDL_Renderer *renderer, Texture mPlayerTexture[], Texture mTankTexture[], Texture& mBulletTexture, std::map<int,std::string>& idToName);
     int getX();
     int getY();
     void bulletHit();
+    bool isDead();
+    void setHealth(int h);
 
 private:
     Tank* tank;

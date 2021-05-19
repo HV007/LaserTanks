@@ -10,7 +10,7 @@ void Player::handleEvent(int a, int b, int c, std::vector<Bullet*> &bullets, Mix
 }
 
 void Player::move(Maze& maze, Health& h, Network& network, int my_id, Mix_Chunk *gHealthPickSound) {
-    tank->move(SCREEN_WIDTH, SCREEN_HEIGHT, maze, h, network, my_id, gHealthPickSound);
+    tank->move(SCREEN_WIDTH, SCREEN_HEIGHT, maze, h, network, my_id, id, gHealthPickSound);
 }
 
 void Player::reduceHealth() {
@@ -30,7 +30,7 @@ int Player::getNextTick() {
     return nextTick;
 }
 
-void Player::render(SDL_Renderer *renderer, Texture mPlayerTexture[], Texture mTankTexture[], Texture& mBulletTexture) {
+void Player::render(SDL_Renderer *renderer, Texture mPlayerTexture[], Texture mTankTexture[], Texture& mBulletTexture, std::map<int,std::string>& idToName) {
     tank->render(renderer, mTankTexture[id], mBulletTexture);
     SDL_Color textColor;
     if(id == 0) {
@@ -44,10 +44,11 @@ void Player::render(SDL_Renderer *renderer, Texture mPlayerTexture[], Texture mT
     }
     std::stringstream healthText;
     healthText.str("");
-    healthText << "Player " << id+1 << ":- Health = " << health;
+    healthText << idToName[id] << ":- Health = " << health;
     if(!mPlayerTexture[id].loadFromRenderedText(renderer, healthText.str().c_str(), textColor)) {
 		printf("Failed to render text texture!\n");
 	}
+    if(health <= 0) return;
     if(id == 0) {
         mPlayerTexture[id].render(renderer, BX, BY);
     } else if(id == 1) {
@@ -69,4 +70,12 @@ int Player::getY() {
 
 void Player::bulletHit() {
     health -= 20;
+}
+
+bool Player::isDead() {
+    return health <= 0;
+}
+
+void Player::setHealth(int h) {
+    health = h;
 }
