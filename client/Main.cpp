@@ -8,7 +8,7 @@ SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 Texture gTextTexture;
 Texture gInputTextTexture;
-Texture gTankTexture;
+Texture gTankTexture[4];
 Texture gBulletTexture;
 Texture gHeartTexture;
 Texture gPlayerTexture[4];
@@ -188,7 +188,19 @@ bool loadMedia() {
 		printf( "Failed to render text texture!\n" );
 		success = false;
 	}
-	if(!gTankTexture.loadFromFile(gRenderer, "images/tank_red.bmp")) {
+	if(!gTankTexture[0].loadFromFile(gRenderer, "images/tank_red.bmp")) {
+		printf( "Failed to load tank texture!\n" );
+		success = false;
+	}
+	if(!gTankTexture[1].loadFromFile(gRenderer, "images/tank_cyan.png")) {
+		printf( "Failed to load tank texture!\n" );
+		success = false;
+	}
+	if(!gTankTexture[2].loadFromFile(gRenderer, "images/tank_white.png")) {
+		printf( "Failed to load tank texture!\n" );
+		success = false;
+	}
+	if(!gTankTexture[3].loadFromFile(gRenderer, "images/tank_purple.png")) {
 		printf( "Failed to load tank texture!\n" );
 		success = false;
 	}
@@ -237,7 +249,7 @@ bool loadMedia() {
 }
 
 void close() {
-	gTankTexture.free();
+	
 	gTextTexture.free();
 	gInputTextTexture.free();
 	gHeartTexture.free();
@@ -253,7 +265,7 @@ void close() {
 	Mix_FreeMusic( gGameMusic );
 	gGameMusic = NULL;
 
-	for(int i = 0; i < 4; i++) gPlayerTexture[i].free();
+	for(int i = 0; i < 4; i++) gTankTexture[i].free(),gPlayerTexture[i].free();
 
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);

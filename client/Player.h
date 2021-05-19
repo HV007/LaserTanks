@@ -17,7 +17,7 @@ public:
     void increaseHealth();
     int getHealth();
     int getNextTick();
-    void render(SDL_Renderer *renderer, Texture mPlayerTexture[], Texture& mTankTexture, Texture& mBulletTexture);
+    void render(SDL_Renderer *renderer, Texture mPlayerTexture[], Texture mTankTexture[], Texture& mBulletTexture);
     int getX();
     int getY();
     void bulletHit();
