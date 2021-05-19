@@ -465,6 +465,7 @@ int main(int argc, char* args[]) {
 				if(start && alive && players[my_id]->isDead()) {
 					network.sendMessage("5 " + std::to_string(my_id) + "\n");
 					alive = false;
+					Mix_PlayChannel( -1, gPlayerLostSound, 0 );
 				}
 
 				for(int i = 0; i < tot_players; i++) {
