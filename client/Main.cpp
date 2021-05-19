@@ -24,7 +24,7 @@ Maze maze;
 Player* players[4];
 Health health;
 Network network;
-Timer timer;
+Timer timer,timer1;
 std::vector<Bullet*> bullets;
 
 bool quit = false;
@@ -292,9 +292,9 @@ int main(int argc, char* args[]) {
 			SDL_Color textColor = {255, 64, 0};
 
 			//The current input text.
-			std::string playerName = "Player";
+			std::string playerName = "";
 			gInputTextTexture.loadFromRenderedText(gRenderer, playerName.c_str(), textColor );
-			bool renderText=false;
+			timer1.start();
 
 			//Enable text input
 			SDL_StartTextInput();
@@ -321,14 +321,12 @@ int main(int argc, char* args[]) {
 						{
 							//lop off character
 							playerName.pop_back();
-							renderText = true;
 						}
 					}//Special text input event
 					else if( e.type == SDL_TEXTINPUT )
 					{
 						//Append character
 						playerName += e.text.text;
-						renderText = true;
 					}
 					if(start) network.handleEvent(e, my_id);
 					if(connect && network.incomingMessage()) processMessage(network.getMessage());
@@ -350,21 +348,31 @@ int main(int argc, char* args[]) {
 						maze.render(gRenderer, 255);
 					}
 				} else {
-					//Rerender text if needed
-					if( renderText )
+					//Text is not empty
+					if( playerName != "" )
 					{
-						//Text is not empty
-						if( playerName != "" )
-						{
-							//Render new text
-							gInputTextTexture.loadFromRenderedText(gRenderer, playerName.c_str(), textColor );
+						std::string temp=playerName;
+						if (timer1.getTicks()>300){
+							temp+='|';
+							if (timer1.getTicks()>800)  {
+								timer1.start();
+							}
 						}
-						//Text is empty
-						else
-						{
-							//Render space texture
-							gInputTextTexture.loadFromRenderedText(gRenderer, " ", textColor );
+						//Render new text
+						gInputTextTexture.loadFromRenderedText(gRenderer, temp.c_str(), textColor );
+					}
+					//Text is empty
+					else
+					{
+						//Render space texture
+						std::string temp=" ";
+						if (timer1.getTicks()>300){
+							temp+='|';
+							if (timer1.getTicks()>800)  {
+								timer1.start();
+							}
 						}
+						gInputTextTexture.loadFromRenderedText(gRenderer, temp.c_str(), textColor );
 					}
 					gTextTexture.render(gRenderer, (SCREEN_WIDTH - gTextTexture.getWidth())/2, (SCREEN_HEIGHT - gTextTexture.getHeight())/2);
 					gInputTextTexture.render(gRenderer, ( SCREEN_WIDTH - gInputTextTexture.getWidth() ) / 2, (SCREEN_HEIGHT + gTextTexture.getHeight())/2 );
