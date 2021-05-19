@@ -20,6 +20,7 @@ Mix_Chunk *gBulletSound = NULL;
 Mix_Chunk *gChangeTabSound = NULL;
 Mix_Chunk *gHealthPickSound = NULL;
 Mix_Chunk *gPlayerLostSound = NULL;
+Mix_Chunk *gWinnerSound = NULL;
 
 Maze maze;
 Player* players[4];
@@ -36,6 +37,7 @@ bool connect = false;
 bool alive = true;
 int tot_players = -1;
 int my_id = -1;
+int winning_id=-1;
 
 void processMessage(std::vector<std::string> messages) {
 	for(std::string message : messages) {
@@ -103,6 +105,7 @@ void processMessage(std::vector<std::string> messages) {
 			for(int i = 0; i < tot_players; i++) {
 				if(!players[i]->isDead()) id = i;
 			}
+			if (winning_id==-1) winning_id=id;
 			std::stringstream notifText;
 			notifText.str("");
 			notifText << idToName[id] << " won";
@@ -310,6 +313,12 @@ bool loadMedia() {
 		printf( "Failed to load high sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
 		success = false;
 	}
+	gWinnerSound = Mix_LoadWAV( "sounds/winner_music2.wav" );
+	if( gWinnerSound == NULL )
+	{
+		printf( "Failed to load high sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+		success = false;
+	}
 
 	return success;
 }
@@ -328,6 +337,8 @@ void close() {
 	gHealthPickSound = NULL;
 	Mix_FreeChunk( gPlayerLostSound );
 	gPlayerLostSound = NULL;
+	Mix_FreeChunk( gWinnerSound );
+	gWinnerSound = NULL;
 	//Free the music
 	Mix_FreeMusic( gGameMusic );
 	gGameMusic = NULL;
@@ -408,6 +419,10 @@ int main(int argc, char* args[]) {
 						{
 							//Play the music
 							Mix_PlayMusic( gGameMusic, -1 );
+						}
+						if (winning_id==my_id){
+							winning_id=-2;
+							Mix_PlayChannel( -1, gWinnerSound, 0 );
 						}
 						maze.render(gRenderer, 255);
 						gNotifTexture.render(gRenderer, (SCREEN_WIDTH - gNotifTexture.getWidth())/2, BY);
