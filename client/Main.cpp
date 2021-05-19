@@ -293,7 +293,7 @@ int main(int argc, char* args[]) {
 
 			//The current input text.
 			std::string playerName = "";
-			gInputTextTexture.loadFromRenderedText(gRenderer, playerName.c_str(), textColor );
+			//gInputTextTexture.loadFromRenderedText(gRenderer, playerName.c_str(), textColor );
 			timer1.start();
 
 			//Enable text input
@@ -375,7 +375,7 @@ int main(int argc, char* args[]) {
 						gInputTextTexture.loadFromRenderedText(gRenderer, temp.c_str(), textColor );
 					}
 					gTextTexture.render(gRenderer, (SCREEN_WIDTH - gTextTexture.getWidth())/2, (SCREEN_HEIGHT - gTextTexture.getHeight())/2);
-					gInputTextTexture.render(gRenderer, ( SCREEN_WIDTH - gInputTextTexture.getWidth() ) / 2, (SCREEN_HEIGHT + gTextTexture.getHeight())/2 );
+					if (!connect) gInputTextTexture.render(gRenderer, ( SCREEN_WIDTH - gInputTextTexture.getWidth() ) / 2, (SCREEN_HEIGHT + gTextTexture.getHeight())/2 );
 				}	
 
 				if(start && timer.getTicks() > 2500) {
