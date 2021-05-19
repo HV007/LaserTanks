@@ -391,7 +391,7 @@ int main(int argc, char* args[]) {
 						//Append character
 						playerName += e.text.text;
 					}
-					if(start) players[my_id]->handleEvent(e, gBulletSound, network, bullets);
+					if(start && alive) players[my_id]->handleEvent(e, gBulletSound, network, bullets);
 					if(connect && network.incomingMessage()) processMessage(network.getMessage());
 				}
 
