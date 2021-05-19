@@ -38,7 +38,7 @@ bool Texture::loadFromFile(SDL_Renderer* renderer, std::string path) {
 bool Texture::loadFromRenderedText(SDL_Renderer* renderer, std::string textureText, SDL_Color textColor) {
 	free();
 
-    mFont = TTF_OpenFont("fonts/lazy.ttf", 28);
+    mFont = TTF_OpenFont("fonts/font4.ttf", 28);
 	if(mFont == NULL) {
 		printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
 		return false;
