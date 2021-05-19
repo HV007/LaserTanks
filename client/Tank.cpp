@@ -2,10 +2,10 @@
 
 enum direction {left,up,right,down};
 
-Tank::Tank() {
-    mPosX = GAP + BX + 10;
-    mPosY = GAP + BY + TEXT_GAP + 10;
-    face = right;
+Tank::Tank(int x, int y, int f) {
+    mPosX = x;
+    mPosY = y;
+    face = f;
     degree = 0;
 
     mVelX = 0;

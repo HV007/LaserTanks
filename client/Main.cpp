@@ -88,7 +88,7 @@ void processMessage(std::vector<std::string> messages) {
 			std::stringstream notifText;
 			notifText.str("");
 			notifText << idToName[id] << " disconnected";
-			SDL_Color textColor = {255, 64, 0};
+			SDL_Color textColor = {0,0,255};
 			gNotifTexture.loadFromRenderedText(gRenderer, notifText.str().c_str(), textColor);
 		} else if(code == 5) {
 			int id = message[2] - '0';
@@ -96,7 +96,7 @@ void processMessage(std::vector<std::string> messages) {
 			std::stringstream notifText;
 			notifText.str("");
 			notifText << idToName[id] << " died";
-			SDL_Color textColor = {255, 64, 0};
+			SDL_Color textColor = {0,0,255};
 			gNotifTexture.loadFromRenderedText(gRenderer, notifText.str().c_str(), textColor);
 		} else if(code == 6) {
 			int id = -1;
@@ -106,7 +106,7 @@ void processMessage(std::vector<std::string> messages) {
 			std::stringstream notifText;
 			notifText.str("");
 			notifText << idToName[id] << " won";
-			SDL_Color textColor = {255, 64, 0};
+			SDL_Color textColor = {0,0,255};
 			gNotifTexture.loadFromRenderedText(gRenderer, notifText.str().c_str(), textColor);
 		} else if(code == 7) {
 			int id = message[2] - '0';
@@ -245,7 +245,7 @@ bool loadMedia() {
 	bool success = true;
 
 	SDL_Color textColor = {255, 64, 0};
-	if(!gTextTexture.loadFromRenderedText(gRenderer, "Press ENTER to connect to server:", textColor)) {
+	if(!gTextTexture.loadFromRenderedText(gRenderer, "Enter you NAME then Press ENTER to connect to server:", textColor)) {
 		printf( "Failed to render text texture!\n" );
 		success = false;
 	}
@@ -257,7 +257,7 @@ bool loadMedia() {
 		printf( "Failed to load tank texture!\n" );
 		success = false;
 	}
-	if(!gTankTexture[2].loadFromFile(gRenderer, "images/tank_white.png")) {
+	if(!gTankTexture[2].loadFromFile(gRenderer, "images/tank_yellow.png")) {
 		printf( "Failed to load tank texture!\n" );
 		success = false;
 	}
@@ -265,6 +265,7 @@ bool loadMedia() {
 		printf( "Failed to render text texture!\n" );
 		success = false;
 	}
+	textColor = {0, 0, 255};
 	if(!gNotifTexture.loadFromRenderedText(gRenderer, "Game Started!", textColor)) {
 		printf( "Failed to load tank texture!\n" );
 		success = false;

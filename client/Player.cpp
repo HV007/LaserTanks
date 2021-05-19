@@ -1,8 +1,13 @@
 #include "Player.h"
 
+enum direction {left,up,right,down};
+
 Player::Player(int id): id(id), nextTick(3500) {
     health = 100;
-    tank = new Tank();
+    if (id==0) tank = new Tank(GAP + BX + 10,GAP + BY + TEXT_GAP + 10,right);
+    else if (id==1) tank = new Tank(SCREEN_WIDTH - 34 - GAP - BX,GAP + BY + TEXT_GAP + 10,left); 
+    else if (id==2) tank = new Tank(GAP + BX + 10,SCREEN_HEIGHT - 40 - GAP - BY,right); 
+    else tank = new Tank(SCREEN_WIDTH - 34 - GAP - BX,SCREEN_HEIGHT - 40 - GAP - BY,left); 
 }
 
 void Player::handleEvent(SDL_Event &e, Mix_Chunk *gBulletSound, Network& network, std::vector<Bullet*> &bullets) {
@@ -36,11 +41,11 @@ void Player::render(SDL_Renderer *renderer, Texture mPlayerTexture[], Texture mT
     if(id == 0) {
         textColor = {255, 64, 0};
     } else if(id == 1) {
-        textColor = {255, 64, 0};
+        textColor = {0, 255, 255};
     } else if(id == 2) {
-        textColor = {255, 64, 0};
+        textColor = {255,255,0};
     } else {
-        textColor = {255, 64, 0};
+        textColor = {255,0,255};
     }
     std::stringstream healthText;
     healthText.str("");

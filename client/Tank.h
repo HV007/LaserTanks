@@ -15,7 +15,7 @@ class Tank {
 
 		static const int TANK_VEL = 1;
 
-		Tank();
+		Tank(int x, int y, int f);
 
 		void render(SDL_Renderer* renderer, Texture &mTankTexture, Texture &mBulletTexture);
 		void fire(std::vector<Bullet*> &bullets, int id, Mix_Chunk *gBulletSound);
