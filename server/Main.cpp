@@ -27,6 +27,7 @@ void processString(std::string message) {
 int main(int argc, char* args[]) {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	SDLNet_Init();
+	srand(time(0));
 
 	players = 0;
 	tot_players = 0;

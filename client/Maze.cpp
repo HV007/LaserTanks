@@ -5,7 +5,7 @@
 #define LEFT 2
 #define RIGHT 3
 
-Maze::Maze(): xsize(MAZEX), ysize(MAZEY), numin(0) {}
+Maze::Maze(): xsize(MAZEX), ysize(MAZEY), numin(0), randNum(0) {}
 
 Maze::Maze(int xsize, int ysize): xsize(xsize), ysize(ysize), numin(0) {}
 
@@ -19,8 +19,8 @@ void Maze::initialise() {
 	}
 }
 
-void Maze::generate(int seed) {
-	srand(seed);
+void Maze::generate(int s) {
+	randNum = s;
     int xcur = 1, ycur = 1;
     MAZE[xcur][ycur].in = 1;
     numin++;
@@ -30,7 +30,7 @@ void Maze::generate(int seed) {
         if(MAZE[xcur][ycur-1].in && MAZE[xcur][ycur+1].in && MAZE[xcur-1][ycur].in && MAZE[xcur+1][ycur].in) {
 			do {
 				success = 0;
-				whichway = rand()%4;
+				whichway = genrateRand()%4;
 				switch(whichway) {
 				case UP:
 					if(MAZE[xcur][ycur].up && ycur != 1){
@@ -68,7 +68,7 @@ void Maze::generate(int seed) {
 
         do {
 			success = 0;
-			whichway = rand()%4;
+			whichway = genrateRand()%4;
 			switch(whichway){
 			case UP:
 				if(!MAZE[xcur][ycur-1].in) {
@@ -152,3 +152,9 @@ bool Maze::check_wall(int xx, int yy) {
 	return false;
 }
 
+int Maze::genrateRand() {
+	int mod = 1000000007;
+	int a = 17, b = 23;
+	randNum = (a*randNum + b) % mod;
+	return randNum;
+}
