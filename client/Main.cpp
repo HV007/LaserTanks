@@ -7,6 +7,7 @@ void close();
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 Texture gTextTexture;
+Texture gInputTextTexture;
 Texture gTankTexture;
 Texture gBulletTexture;
 Texture gHeartTexture;
@@ -206,7 +207,7 @@ bool loadMedia() {
 		printf( "Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError() );
 		success = false;
 	}
-	gBulletSound = Mix_LoadWAV( "sounds/wave_sound.wav" );
+	gBulletSound = Mix_LoadWAV( "sounds/wave_sound_high.wav" );
 	if( gBulletSound == NULL )
 	{
 		printf( "Failed to load high sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
@@ -238,6 +239,7 @@ bool loadMedia() {
 void close() {
 	gTankTexture.free();
 	gTextTexture.free();
+	gInputTextTexture.free();
 	gHeartTexture.free();
 	Mix_FreeChunk( gBulletSound );
 	gBulletSound = NULL;
@@ -275,6 +277,16 @@ int main(int argc, char* args[]) {
 
 			SDL_Event e;
 
+			SDL_Color textColor = {255, 64, 0};
+
+			//The current input text.
+			std::string playerName = "Player";
+			gInputTextTexture.loadFromRenderedText(gRenderer, playerName.c_str(), textColor );
+			bool renderText=false;
+
+			//Enable text input
+			SDL_StartTextInput();
+
 			SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
 			SDL_RenderClear(gRenderer);
 
@@ -287,12 +299,24 @@ int main(int argc, char* args[]) {
 							Mix_PlayChannel( -1, gChangeTabSound, 0 );
 							network.connectToServer();
 							connect = true;
-							SDL_Color textColor = {255, 64, 0};
+							//Disable text input
+            				SDL_StopTextInput();
 							if(!gTextTexture.loadFromRenderedText(gRenderer, "Waiting for all players to join ...", textColor)) {
 								printf("Failed to render text texture!\n");
 								exit(1);
 							}
+						}else if ( e.key.keysym.sym == SDLK_BACKSPACE && playerName.length() > 0 )
+						{
+							//lop off character
+							playerName.pop_back();
+							renderText = true;
 						}
+					}//Special text input event
+					else if( e.type == SDL_TEXTINPUT )
+					{
+						//Append character
+						playerName += e.text.text;
+						renderText = true;
 					}
 					if(start) network.handleEvent(e, my_id);
 					if(connect && network.incomingMessage()) processMessage(network.getMessage());
@@ -313,7 +337,26 @@ int main(int argc, char* args[]) {
 						}
 						maze.render(gRenderer, 255);
 					}
-				} else gTextTexture.render(gRenderer, (SCREEN_WIDTH - gTextTexture.getWidth())/2, (SCREEN_HEIGHT - gTextTexture.getHeight())/2);
+				} else {
+					//Rerender text if needed
+					if( renderText )
+					{
+						//Text is not empty
+						if( playerName != "" )
+						{
+							//Render new text
+							gInputTextTexture.loadFromRenderedText(gRenderer, playerName.c_str(), textColor );
+						}
+						//Text is empty
+						else
+						{
+							//Render space texture
+							gInputTextTexture.loadFromRenderedText(gRenderer, " ", textColor );
+						}
+					}
+					gTextTexture.render(gRenderer, (SCREEN_WIDTH - gTextTexture.getWidth())/2, (SCREEN_HEIGHT - gTextTexture.getHeight())/2);
+					gInputTextTexture.render(gRenderer, ( SCREEN_WIDTH - gInputTextTexture.getWidth() ) / 2, (SCREEN_HEIGHT + gTextTexture.getHeight())/2 );
+				}	
 
 				if(start && timer.getTicks() > 2500) {
 					for(int i = 0; i < tot_players; i++) {
