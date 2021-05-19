@@ -12,6 +12,7 @@ Texture gTankTexture[4];
 Texture gBulletTexture;
 Texture gHeartTexture;
 Texture gPlayerTexture[4];
+Texture gNotifTexture;
 //The music that will be played
 Mix_Music *gGameMusic = NULL;  
 //The sound effects that will be used
@@ -26,10 +27,13 @@ Health health;
 Network network;
 Timer timer,timer1;
 std::vector<Bullet*> bullets;
+std::map<int,std::string> idToName;
 
+std::string playerName = "";
 bool quit = false;
 bool start = false;
 bool connect = false;
+bool alive = true;
 int tot_players = -1;
 int my_id = -1;
 
@@ -42,6 +46,7 @@ void processMessage(std::vector<std::string> messages) {
 			tot_players = message[4] - '0';
 			int seed = message[6] - '0';
 			maze.generate(seed);
+			network.sendMessage("8 " + std::to_string(my_id) + " " + playerName + "\n");
 		} else if(code == 1) {
 			start = true;
 			timer.start();
@@ -67,6 +72,32 @@ void processMessage(std::vector<std::string> messages) {
 			int b = message[6] - '0';
 			int c = message[8] - '0';
 			players[id]->handleEvent(a, b, c, bullets, gBulletSound);
+		} else if(code == 4) {
+			int id = message[2] - '0';
+			players[id]->setHealth(0);
+			std::stringstream notifText;
+			notifText.str("");
+			notifText << idToName[id] << " disconnected";
+			SDL_Color textColor = {255, 64, 0};
+			gNotifTexture.loadFromRenderedText(gRenderer, notifText.str().c_str(), textColor);
+		} else if(code == 5) {
+			int id = message[2] - '0';
+			players[id]->setHealth(0);
+			std::stringstream notifText;
+			notifText.str("");
+			notifText << idToName[id] << " died";
+			SDL_Color textColor = {255, 64, 0};
+			gNotifTexture.loadFromRenderedText(gRenderer, notifText.str().c_str(), textColor);
+		} else if(code == 6) {
+			int id = -1;
+			for(int i = 0; i < tot_players; i++) {
+				if(!players[i]->isDead()) id = i;
+			}
+			std::stringstream notifText;
+			notifText.str("");
+			notifText << idToName[id] << " won";
+			SDL_Color textColor = {255, 64, 0};
+			gNotifTexture.loadFromRenderedText(gRenderer, notifText.str().c_str(), textColor);
 		} else if(code == 7) {
 			int id = message[2] - '0';
 			int point = 4;
@@ -85,6 +116,15 @@ void processMessage(std::vector<std::string> messages) {
 			}
 			health.collectHealth(x, y);
 			players[id]->increaseHealth();
+		} else if(code == 8) {
+			int id = message[2] - '0';
+			std::string name = "";
+			int point = 4;
+			while(point < message.size()) {
+				name += message[point];
+				point++;
+			}
+			idToName[id] = name;
 		}
 	}
 }
@@ -129,6 +169,10 @@ void renderBullets() {
 
 bool init() {
 	bool success = true;
+	idToName[0] = "Player 0";
+	idToName[1] = "Player 1";
+	idToName[2] = "Player 2";
+	idToName[3] = "Player 3";
 
 	for(int i = 0; i < 4; i++) {
 		players[i] = new Player(i);
@@ -201,6 +245,10 @@ bool loadMedia() {
 		success = false;
 	}
 	if(!gTankTexture[3].loadFromFile(gRenderer, "images/tank_purple.png")) {
+		printf( "Failed to render text texture!\n" );
+		success = false;
+	}
+	if(!gNotifTexture.loadFromRenderedText(gRenderer, "Game Started!", textColor)) {
 		printf( "Failed to load tank texture!\n" );
 		success = false;
 	}
@@ -253,6 +301,7 @@ void close() {
 	gTextTexture.free();
 	gInputTextTexture.free();
 	gHeartTexture.free();
+	gNotifTexture.free();
 	Mix_FreeChunk( gBulletSound );
 	gBulletSound = NULL;
 	Mix_FreeChunk( gChangeTabSound );
@@ -286,14 +335,10 @@ int main(int argc, char* args[]) {
 		if(!loadMedia()) {
 			printf( "Failed to load media!\n" );
 		} else {
-
 			SDL_Event e;
 
 			SDL_Color textColor = {255, 64, 0};
 
-			//The current input text.
-			std::string playerName = "";
-			//gInputTextTexture.loadFromRenderedText(gRenderer, playerName.c_str(), textColor );
 			timer1.start();
 
 			//Enable text input
@@ -305,6 +350,7 @@ int main(int argc, char* args[]) {
 			while(!quit) {
 				while(SDL_PollEvent(&e) != 0) {
 					if(e.type == SDL_QUIT) {
+						if(alive) network.sendMessage("4 " + std::to_string(my_id)+"\n");
 						quit = true;
 					} else if(e.type == SDL_KEYDOWN) {
 						if(e.key.keysym.sym == SDLK_RETURN) {
@@ -346,6 +392,7 @@ int main(int argc, char* args[]) {
 							Mix_PlayMusic( gGameMusic, -1 );
 						}
 						maze.render(gRenderer, 255);
+						gNotifTexture.render(gRenderer, (SCREEN_WIDTH - gNotifTexture.getWidth())/2, BY);
 					}
 				} else {
 					//Text is not empty
@@ -380,8 +427,9 @@ int main(int argc, char* args[]) {
 
 				if(start && timer.getTicks() > 2500) {
 					for(int i = 0; i < tot_players; i++) {
+						if(players[i]->isDead()) continue;
 						players[i]->move(maze, health, network, my_id, gHealthPickSound);
-						players[i]->render(gRenderer, gPlayerTexture, gTankTexture, gBulletTexture);
+						players[i]->render(gRenderer, gPlayerTexture, gTankTexture, gBulletTexture, idToName);
 					}
 					moveBullets();
 					renderBullets();
@@ -389,13 +437,20 @@ int main(int argc, char* args[]) {
 
 				if(start) {
 					for(int i = 0; i < tot_players; i++) {
+						if(players[i]->isDead()) continue;
 						if(checkCollision(players[i]->getX(), players[i]->getY(), i)) {
 							players[i]->bulletHit();
 						}
 					}
 				}
 
+				if(start && alive && players[my_id]->isDead()) {
+					network.sendMessage("5 " + std::to_string(my_id) + "\n");
+					alive = false;
+				}
+
 				for(int i = 0; i < tot_players; i++) {
+					if(start && players[i]->isDead()) continue;
 					if(start && timer.getTicks() >= players[i]->getNextTick()) players[i]->reduceHealth();
 				}
 

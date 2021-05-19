@@ -38,7 +38,6 @@ bool Network::acceptConnection(int tot_players, int seed) {
         sprintf(requestData, "0 %d %d %d\n", currid, tot_players, seed);
         currid++;
         int result = SDLNet_TCP_Send(tmpsocket, requestData, strlen(requestData));
-        std::cout << result << "\n";
         return true;
     }
     return false;
@@ -81,7 +80,5 @@ int Network::getWinner() {
 }
 
 void Network::close() {
-    for(int i = 0; i < socketData.size(); i++) SDLNet_TCP_Close(socketData[i].socket);
-    SDLNet_FreeSocketSet(sockets);
-    SDLNet_TCP_Close(server);
+    
 }

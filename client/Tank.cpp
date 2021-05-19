@@ -48,7 +48,7 @@ void Tank::handleEvent(int a, int b, int c, std::vector<Bullet*> &bullets, int i
     }
 }
 
-void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health, Network& network, int my_id, Mix_Chunk *gHealthPickSound) {
+void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health, Network& network, int my_id, int id, Mix_Chunk *gHealthPickSound) {
     delay++;
     delay_time++;
     if (delay_time>30){                  // tune this
@@ -65,7 +65,7 @@ void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health,
             else mPosX++;
             break;
         }
-        if(health.hasHealth(mPosX+TANK_WIDTH/2, mPosY+TANK_HEIGHT/2)) {
+        if(id == my_id && health.hasHealth(mPosX+TANK_WIDTH/2, mPosY+TANK_HEIGHT/2)) {
             Mix_PlayChannel( -1, gHealthPickSound, 0 );
             std::string message = "7 " + std::to_string(my_id) + " " + std::to_string(mPosX+TANK_WIDTH/2) + " " + std::to_string(mPosY+TANK_HEIGHT/2) + "\n";
             network.sendMessage(message);
@@ -79,7 +79,7 @@ void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health,
             else mPosY++;
             break;
         }
-        if(health.hasHealth(mPosX+TANK_WIDTH/2, mPosY+TANK_HEIGHT/2)) {
+        if(id == my_id && health.hasHealth(mPosX+TANK_WIDTH/2, mPosY+TANK_HEIGHT/2)) {
             Mix_PlayChannel( -1, gHealthPickSound, 0 );
             std::string message = "7 " + std::to_string(my_id) + " " + std::to_string(mPosX+TANK_WIDTH/2) + " " + std::to_string(mPosY+TANK_HEIGHT/2) + "\n";
             network.sendMessage(message);

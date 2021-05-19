@@ -14,9 +14,11 @@ void processString(std::string message) {
 	std::cout << "Recieved: " << message;
 	int code = message[0] - '0';
 	std::string toSend = message;
-	if(code == 5 || code == 6) {
+	if(code == 4) {
 		int id = (message[2] - '0');
 		network.removePlayer(id);
+		players--;
+	} else if(code == 5) {
 		players--;
 	}
 	network.sendAll(toSend);
@@ -25,6 +27,7 @@ void processString(std::string message) {
 int main(int argc, char* args[]) {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	SDLNet_Init();
+	srand(time(0));
 
 	players = 0;
 	tot_players = 0;
@@ -50,9 +53,11 @@ int main(int argc, char* args[]) {
 			std::string message = network.getMessage();
 			processString(message);
 
+			if(tot_players > 1 && players == 1) {
+				network.sendAll("6 \n");
+			}
+
 			if(players == 0) {
-				int id = network.getWinner();
-				network.sendAll("7 " + (id+'0') + '\n');
 				break;
 			}
 		}
@@ -64,6 +69,4 @@ int main(int argc, char* args[]) {
 	network.close();
 	SDLNet_Quit();
 	SDL_Quit();
-
-	return 0;
 }
