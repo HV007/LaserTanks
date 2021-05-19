@@ -47,7 +47,7 @@ void processMessage(std::vector<std::string> messages) {
 			int seed = message[6] - '0';
 			maze.generate(seed);
 			network.sendMessage("8 " + std::to_string(my_id) + " " + playerName + "\n");
-		} else if(code == 1) {
+		} else if(code == 1 && message.size() < 3) {
 			start = true;
 			timer.start();
 		} else if(code == 2) {
@@ -68,10 +68,20 @@ void processMessage(std::vector<std::string> messages) {
 			health.createHealth(x, y);
 		} else if(code == 3) {
 			int id = message[2] - '0';
-			int a = message[4] - '0';
-			int b = message[6] - '0';
-			int c = message[8] - '0';
-			players[id]->handleEvent(a, b, c, bullets, gBulletSound);
+			int x = 0, y = 0;
+			int point = 4;
+			while((message[point]-'0') >= 0 && (message[point]-'0') <= 9) {
+				x *= 10;
+				x += (message[point]-'0');
+				point++;
+			}
+			point++;
+			while((message[point]-'0') >= 0 && (message[point]-'0') <= 9) {
+				y *= 10;
+				y += (message[point]-'0');
+				point++;
+			}
+			if(id != my_id) players[id]->moveTo(x, y);
 		} else if(code == 4) {
 			int id = message[2] - '0';
 			players[id]->setHealth(0);
@@ -125,6 +135,13 @@ void processMessage(std::vector<std::string> messages) {
 				point++;
 			}
 			idToName[id] = name;
+		} else if(code == 9) {
+			int id = message[2] - '0';
+			int f = message[4] - '0';
+			if(id != my_id) players[id]->setFace(f);
+		} else if(code == 1 && message.size() >= 3) {
+			int id = message[3] - '0';
+			if(id != my_id) players[id]->fire(bullets, gBulletSound);
 		}
 	}
 }
@@ -374,7 +391,7 @@ int main(int argc, char* args[]) {
 						//Append character
 						playerName += e.text.text;
 					}
-					if(start) network.handleEvent(e, my_id);
+					if(start) players[my_id]->handleEvent(e, gBulletSound, network, bullets);
 					if(connect && network.incomingMessage()) processMessage(network.getMessage());
 				}
 

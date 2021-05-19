@@ -5,8 +5,8 @@ Player::Player(int id): id(id), nextTick(3500) {
     tank = new Tank();
 }
 
-void Player::handleEvent(int a, int b, int c, std::vector<Bullet*> &bullets, Mix_Chunk *gBulletSound) {
-    tank->handleEvent(a, b, c, bullets, id, gBulletSound);
+void Player::handleEvent(SDL_Event &e, Mix_Chunk *gBulletSound, Network& network, std::vector<Bullet*> &bullets) {
+    tank->handleEvent(e, id, gBulletSound, network, bullets);
 }
 
 void Player::move(Maze& maze, Health& h, Network& network, int my_id, Mix_Chunk *gHealthPickSound) {
@@ -15,7 +15,7 @@ void Player::move(Maze& maze, Health& h, Network& network, int my_id, Mix_Chunk 
 
 void Player::reduceHealth() {
     nextTick += 1000;
-    if(health > 0) health-=10;
+    if(health > 0) health--;
 }
 
 void Player::increaseHealth() {
@@ -78,4 +78,16 @@ bool Player::isDead() {
 
 void Player::setHealth(int h) {
     health = h;
+}
+
+void Player::moveTo(int x, int y) {
+    tank->moveTo(x, y);
+}
+
+void Player::setFace(int f) {
+    tank->setFace(f);
+}
+
+void Player::fire(std::vector<Bullet*> &bullets, Mix_Chunk *gBulletSound) {
+    tank->fire(bullets, id, gBulletSound);
 }

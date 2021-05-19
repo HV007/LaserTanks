@@ -11,7 +11,7 @@ class Player {
 public:
     Player(int id);
 
-    void handleEvent(int a, int b, int c, std::vector<Bullet*> &bullets, Mix_Chunk *gBulletSound);
+    void handleEvent(SDL_Event &e, Mix_Chunk *gBulletSound, Network& network, std::vector<Bullet*> &bullets);
     void move(Maze& maze, Health& h, Network& network, int my_id, Mix_Chunk *gHealthPickSound);
     void reduceHealth();
     void increaseHealth();
@@ -23,6 +23,9 @@ public:
     void bulletHit();
     bool isDead();
     void setHealth(int h);
+    void moveTo(int x, int y);
+    void setFace(int f);
+    void fire(std::vector<Bullet*> &bullets, Mix_Chunk *gBulletSound);
 
 private:
     Tank* tank;
