@@ -19,10 +19,12 @@ public:
     void generate(int seed);
     void render(SDL_Renderer* renderer, Uint8 opacity);
     bool check_wall(int x,int y);
+    int genrateRand();
 
 private:
     int xsize, ysize;
     cell MAZE[MAX_SIZE][MAX_SIZE];
     int numin;
+    int randNum;
 };
 #endif

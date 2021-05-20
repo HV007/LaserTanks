@@ -8,7 +8,7 @@ public:
     Network();
     ~Network();
 
-    void connectToServer();
+    bool connectToServer(SDL_Renderer *gRenderer, Texture &gTextTexture);
     bool incomingMessage();
     std::vector<std::string> getMessage();
     void sendMessage(std::string message);

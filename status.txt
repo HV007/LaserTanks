@@ -1,0 +1,14 @@
+Tasks done:
+1) Compiling successfully on MacOS and Ubuntu
+2) Running successfully on MacOS and Ubuntu
+3) All features seems to working good
+4) Tested for 1-4 players
+
+Issues:
+1) The system running both server and client lags a bit
+
+Future Possibilitites:
+1) Enable the user to select from various maps.
+2) Enhance the UI. Changes in the starting screen, health bar , etc. 
+3) More animation.
+4) Keep a log of previous games played.
