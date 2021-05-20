@@ -228,7 +228,7 @@ bool init() {
 			printf("Warning: Linear texture filtering not enabled!");
 		}
 
-		gWindow = SDL_CreateWindow("Maze", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		gWindow = SDL_CreateWindow("LaserTank", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if(gWindow == NULL) {
 			printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
 			success = false;
@@ -293,7 +293,7 @@ bool loadMedia() {
 		printf( "Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError() );
 		success = false;
 	}
-	gBulletSound = Mix_LoadWAV( "sounds/wave_sound_high.wav" );
+	gBulletSound = Mix_LoadWAV( "sounds/wave_sound.wav" );
 	if( gBulletSound == NULL )
 	{
 		printf( "Failed to load high sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
