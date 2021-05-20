@@ -13,6 +13,7 @@ Texture gBulletTexture;
 Texture gHeartTexture;
 Texture gPlayerTexture[4];
 Texture gNotifTexture;
+Texture gDeathTexture;
 //The music that will be played
 Mix_Music *gGameMusic = NULL;  
 //The sound effects that will be used
@@ -26,7 +27,7 @@ Maze maze;
 Player* players[4];
 Health health;
 Network network;
-Timer timer,timer1;
+Timer timer,timer1,time_death[4];
 std::vector<Bullet*> bullets;
 std::map<int,std::string> idToName;
 
@@ -38,6 +39,8 @@ bool alive = true;
 int tot_players = -1;
 int my_id = -1;
 int winning_id=-1;
+int deathX[4];
+int deathY[4];
 bool background_sound=true;
 
 void processMessage(std::vector<std::string> messages) {
@@ -287,6 +290,10 @@ bool loadMedia() {
 		printf( "Failed to load tank texture!\n" );
 		success = false;
 	}
+	if(!gDeathTexture.loadFromFile(gRenderer, "images/skull.png")) {
+		printf( "Failed to load tank texture!\n" );
+		success = false;
+	}
 	//Load music
 	gGameMusic = Mix_LoadMUS( "sounds/game_music_low.wav" );
 	if( gGameMusic == NULL )
@@ -333,6 +340,8 @@ void close() {
 	
 	gTextTexture.free();
 	gInputTextTexture.free();
+	gBulletTexture.free();
+	gDeathTexture.free();
 	gHeartTexture.free();
 	gNotifTexture.free();
 	Mix_FreeChunk( gBulletSound );
@@ -463,10 +472,17 @@ int main(int argc, char* args[]) {
 					gTextTexture.render(gRenderer, (SCREEN_WIDTH - gTextTexture.getWidth())/2, (SCREEN_HEIGHT - gTextTexture.getHeight())/2);
 					if (!connect) gInputTextTexture.render(gRenderer, ( SCREEN_WIDTH - gInputTextTexture.getWidth() ) / 2, (SCREEN_HEIGHT + gTextTexture.getHeight())/2 );
 				}	
+				
 
 				if(start && timer.getTicks() > 2500) {
 					for(int i = 0; i < tot_players; i++) {
-						if(players[i]->isDead()) continue;
+						if(players[i]->isDead()) {
+							int death_ticks=time_death[i].getTicks();
+							if (death_ticks<2500){
+								gDeathTexture.render(gRenderer, deathX[i], deathY[i], NULL,0);
+							}
+							continue;
+						}
 						players[i]->move(maze, health, network, my_id, gHealthPickSound);
 						players[i]->render(gRenderer, gPlayerTexture, gTankTexture, gBulletTexture, idToName);
 					}
@@ -487,6 +503,9 @@ int main(int argc, char* args[]) {
 					network.sendMessage("5 " + std::to_string(my_id) + "\n");
 					alive = false;
 					Mix_PlayChannel( -1, gPlayerLostSound, 0 );
+					deathX[my_id]=players[my_id]->getX();
+					deathY[my_id]=players[my_id]->getY();
+					time_death[my_id].start();
 				}
 
 				for(int i = 0; i < tot_players; i++) {
