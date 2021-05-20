@@ -88,7 +88,7 @@ void Tank::move(int SCREEN_WIDTH, int SCREEN_HEIGHT, Maze& maze, Health& health,
     }
 
     if(prevX != mPosX || prevY != mPosY) {
-        network.sendMessage("3 " + std::to_string(id) + " " + std::to_string(mPosX) + " " + std::to_string(mPosY) + "\n");
+        network.sendMessage("3 " + std::to_string(id) + " " + std::to_string(mPosX) + " " + std::to_string(mPosY) + " " + std::to_string(face) + "\n");
     }
 }
 

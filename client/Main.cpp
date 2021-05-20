@@ -83,7 +83,12 @@ void processMessage(std::vector<std::string> messages) {
 				y += (message[point]-'0');
 				point++;
 			}
-			if(id != my_id) players[id]->moveTo(x, y);
+			point++;
+			int f = message[point] - '0';
+			if(id != my_id) {
+				players[id]->moveTo(x, y);
+				players[id]->setFace(f);
+			}
 		} else if(code == 4) {
 			int id = message[2] - '0';
 			players[id]->setHealth(0);
@@ -384,14 +389,14 @@ int main(int argc, char* args[]) {
 					} else if(e.type == SDL_KEYDOWN) {
 						if(e.key.keysym.sym == SDLK_RETURN) {
 							Mix_PlayChannel( -1, gChangeTabSound, 0 );
-							network.connectToServer();
-							connect = true;
-							//Disable text input
-            				SDL_StopTextInput();
-							if(!gTextTexture.loadFromRenderedText(gRenderer, "Waiting for all players to join ...", textColor)) {
-								printf("Failed to render text texture!\n");
-								exit(1);
+							if(network.connectToServer(gRenderer, gTextTexture)) {
+								connect = true;
+								if(!gTextTexture.loadFromRenderedText(gRenderer, "Waiting for all players to join ...", textColor)) {
+									printf("Failed to render text texture!\n");
+									exit(1);
+								}
 							}
+							SDL_StopTextInput();
 						}else if ( e.key.keysym.sym == SDLK_BACKSPACE && playerName.length() > 0 )
 						{
 							//lop off character

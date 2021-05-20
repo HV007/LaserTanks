@@ -74,7 +74,7 @@ int Player::getY() {
 }
 
 void Player::bulletHit() {
-    health -= 20;
+    health -= 10;
 }
 
 bool Player::isDead() {

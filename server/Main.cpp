@@ -55,6 +55,7 @@ int main(int argc, char* args[]) {
 
 			if(tot_players > 1 && players == 1) {
 				network.sendAll("6 \n");
+				break;
 			}
 
 			if(players == 0) {
@@ -62,6 +63,7 @@ int main(int argc, char* args[]) {
 			}
 		}
 		if(players == 0) break;
+		SDL_Delay(50);
 	}
 
 	network.sendAll("-1\n");

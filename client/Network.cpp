@@ -21,17 +21,24 @@ Network::~Network() {
     close();
 }
 
-void Network::connectToServer() {
+bool Network::connectToServer(SDL_Renderer *gRenderer, Texture &gTextTexture) {
     IPaddress ip;
     if(SDLNet_ResolveHost(&ip, IP_ADDRESS.c_str(), 3000) == -1) {
+        SDL_Color textColor = {255, 64, 0};
+        gTextTexture.loadFromRenderedText(gRenderer, "Error connecting to server", textColor);
         std::cout << "Error connecting to server\n";
+        return false;
     }
     connection = SDLNet_TCP_Open(&ip);
     if(connection == NULL) {
+        SDL_Color textColor = {255, 64, 0};
+        gTextTexture.loadFromRenderedText(gRenderer, "Error connecting to server", textColor);
         std::cout << "Error connecting to server\n";
+        return false;
     }
     server = SDLNet_AllocSocketSet(1);
     SDLNet_TCP_AddSocket(server, connection);
+    return true;
 }
 
 void Network::sendMessage(std::string message) {
@@ -46,17 +53,7 @@ bool Network::incomingMessage() {
 
 std::vector<std::string> Network::getMessage() {
     memset(requestData, 0, 1400);
-    // int offset = 0;
-    // do {
-    //     offset += SDLNet_TCP_Recv(connection, requestData, 1400);
-    //     std::cout << "HERE\n";
-    //     if(offset <= 0) {
-    //         std::cout << "Error\n";
-    //     }
-    // } while(requestData[strlen(requestData)-1] != '\n');
     SDLNet_TCP_Recv(connection, requestData, 1400);
-    // for(int i = 0; i < 50; i++) std::cout << i << " " << requestData[i] << "\n";
-    // std::cout << "\n";
     std::vector<std::string> message =  convertToString(requestData, 1400);
     return message;
 }
