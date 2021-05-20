@@ -38,6 +38,7 @@ bool alive = true;
 int tot_players = -1;
 int my_id = -1;
 int winning_id=-1;
+bool background_sound=true;
 
 void processMessage(std::vector<std::string> messages) {
 	for(std::string message : messages) {
@@ -423,7 +424,7 @@ int main(int argc, char* args[]) {
 						if( Mix_PlayingMusic() == 0 )
 						{
 							//Play the music
-							Mix_PlayMusic( gGameMusic, -1 );
+							if (background_sound) Mix_PlayMusic( gGameMusic, -1 );
 						}
 						if (winning_id==my_id){
 							winning_id=-2;

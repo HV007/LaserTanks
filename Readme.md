@@ -30,7 +30,7 @@ All the players should do the following steps:
 4. Enjoy!
 
 # Game Play
-Refer to `Game_Play.pdf` to know about the various rules and features of the game. (Although its quite simple: shoot and kill)
+Refer to `LaserTank.pdf` to know about the various rules and features of the game. (Although its quite simple: shoot and kill)
 
 # Resources
 1. A very comprehensive and easy-to-use tutorial for SDL: [Lazy Foo' Productions](https://lazyfoo.net/tutorials/SDL/index.php)
